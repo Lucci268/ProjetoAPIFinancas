@@ -49,7 +49,7 @@ A divisão inicial das tarefas de desenvolvimento da API está organizada da seg
 -   Davi Magalhães Mendes
 -   Felipe Assis Ferreira dos Santos
 -   Júlio César Bizarria Lins
--   Lucciano Henrique
+-   Lucciano Henrique Pereira Cordeiro
 
 ## 📊 Status do Projeto
 
