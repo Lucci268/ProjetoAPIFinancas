@@ -1,4 +1,4 @@
-# Projeto API de Filmes e Biblioteca
+# Projeto API de Filmes
 
 Este repositório contém o código-fonte da API para o projeto de software de uma biblioteca de filmes. O objetivo é criar um sistema robusto que permita a usuários e administradores gerenciar e interagir com um catálogo de filmes de forma eficiente.
 
@@ -44,12 +44,12 @@ A divisão inicial das tarefas de desenvolvimento da API está organizada da seg
 
 ## 👥 Equipe do Projeto
 
--   Artur pinto de bacalhau
--   Daniel da costa da silva
+-   Artur Lima Pinto Bacalhau
+-   Daniel Silva Costa
 -   Davi Magalhães Mendes
--   Felipe assis
--   Júlio cézar
--   Lucciano henrique
+-   Felipe Assis Ferreira dos Santos
+-   Júlio César Bizarria Lins
+-   Lucciano Henrique
 
 ## 📊 Status do Projeto
 
