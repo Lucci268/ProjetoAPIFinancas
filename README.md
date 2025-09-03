@@ -2,6 +2,15 @@
 
 Este repositório contém o código-fonte da API para o projeto de software de uma biblioteca de filmes. O objetivo é criar um sistema robusto que permita a usuários e administradores gerenciar e interagir com um catálogo de filmes de forma eficiente.
 
+## 📌 Quadro Kanban (Trello)
+
+O andamento do projeto está sendo acompanhado no Trello.  
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/b3f05c74-befa-4f1c-b504-9fb8af384216" width="1398" height="598" alt="Quadro Kanban" />
+</div>
+
+
 ## 📝 Descrição do Projeto
 
 A API foi projetada para ser o backend de uma aplicação onde os usuários podem descobrir, avaliar e organizar filmes. Administradores, por sua vez, terão ferramentas para manter o catálogo atualizado e gerenciar a base de usuários. O projeto segue uma metodologia ágil, com tarefas e histórias de usuário organizadas em um quadro Kanban.
