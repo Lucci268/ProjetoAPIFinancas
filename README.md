@@ -44,12 +44,12 @@ A divisão inicial das tarefas de desenvolvimento da API está organizada da seg
 
 ## 👥 Equipe do Projeto
 
--   Artur
--   Daniel
--   Davi
--   Felipe
--   Júlio
--   Lucciano
+-   Artur pinto de bacalhau
+-   Daniel da costa da silva
+-   Davi Magalhães Mendes
+-   Felipe assis
+-   Júlio cézar
+-   Lucciano henrique
 
 ## 📊 Status do Projeto
 
