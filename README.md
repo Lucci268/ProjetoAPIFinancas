@@ -6,13 +6,8 @@ Este repositório contém o código-fonte da API para um sistema de finanças pe
 
 O andamento do projeto está sendo acompanhado no Trello.  
 
-<div align="center">
-  <<div align="center">
-  <img width="1480" height="568" alt="image" src="https://github.com/user-attachments/assets/791c3b18-0e83-4a20-83f7-1ed536fe39f8" />
 
-</div>>
-
-</div>
+<img width="1676" height="555" alt="Captura de tela 2025-09-08 191116" src="https://github.com/user-attachments/assets/0e964bc7-95b1-44df-a0ce-a4931e1eaa3b" />
 
 ## 📝 Descrição do Projeto
 
