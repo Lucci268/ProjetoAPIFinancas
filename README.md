@@ -55,7 +55,7 @@ A API serve como backend de uma aplicação de finanças pessoais. Usuários pod
 - Daniel Silva Costa – Modelagem e conexão do banco de dados, relatórios.  
 - Davi Magalhães Mendes – Categorias de receitas e despesas.  
 - Felipe Assis Ferreira dos Santos – Registro de transações.  
-- Júlio César Bizarria Lins – Visualização de contas, relatórios e estatísticas.  
+- Júlio César Bizarria Lins – Visualização de saldos consolidados, relatórios e estatísticas.  
 - Lucciano Henrique Pereira Cordeiro – Cadastro de usuários e configuração de limites.  
 
 ## 📊 Status do Projeto
