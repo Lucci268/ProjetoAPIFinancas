@@ -29,9 +29,8 @@ A API serve como backend de uma aplicação de finanças pessoais. Usuários pod
 
 ### Para Administradores
 - **Gerenciamento de Categorias:** Criar, atualizar e excluir categorias de receitas e despesas. (Sprint 1)
-- **Relatórios Agregados:** Visualizar relatórios consolidados de todas as transações. (Sprint 2)
-- **Limites de Transações:** Configurar limites por categoria para prevenir abusos. (Sprint 2)
-- **Validação de Dados:** Gerenciar regras para garantir consistência das transações. (Sprint 2)
+- **Relatórios Agregados:** Visualizar relatórios consolidados de todas as movimentações registradas. (Sprint 2)
+- **Validação de Dados:** Gerenciar regras para garantir consistência dos registros financeiros. (Sprint 2)
 - **Estatísticas de Uso:** Acompanhar crescimento de usuários e atividades. (Sprint 3)
 
 ## 🛠️ Estrutura da API (Endpoints)
