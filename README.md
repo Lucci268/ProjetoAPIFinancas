@@ -37,13 +37,13 @@ A API serve como backend de uma aplicação de finanças pessoais. Usuários pod
 
 | Método | Rota                     | Descrição                                        | Responsável(eis)         |
 | :----- | :----------------------- | :-----------------------------------------------| :----------------------- |
-| `POST` | `/users`                 | Cadastra um novo usuário.                        | Lucciano                 |
-| `GET`  | `/users/:id/accounts`     | Lista contas e saldos de um usuário.            | Júlio                    |
-| `POST` | `/transactions`          | Registra uma nova transação (receita ou despesa)| Felipe                   |
-| `GET`  | `/transactions`          | Lista todas as transações filtradas por critérios| Artur                   |
+| `POST` | `/users`                 | Cadastra um novo usuário                        | Lucciano                 |
+| `GET`  | `/users/:id/accounts`     | Lista os registros financeiros de um usuário            | Júlio                    |
+| `POST` | `/transactions`          | Registra uma nova receita ou despesa             | Felipe                   |
+| `GET`  | `/transactions`          | Lista todas as movimentações filtradas por critérios| Artur                   |
 | `POST` | `/categories`            | Cadastra categorias de receita/despesa          | Davi                     |
 | `GET`  | `/reports`               | Gera relatórios financeiros agregados           | Daniel                   |
-| `PATCH`| `/limits/:categoryId`    | Configura limites de transações por categoria   | Lucciano                 |
+| `PATCH`| `/limits/:categoryId`    | Define o limite planejado de gastos para uma categoria   | Lucciano                 |
 | `GET`  | `/statistics`            | Consulta estatísticas gerais do sistema         | Júlio                    |
 
 ### Banco de Dados
