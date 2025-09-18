@@ -1,17 +1,48 @@
-# Projeto API de Finanças
+# 🚀 Projeto API de Finanças
 
 Este repositório contém o código-fonte da API para um sistema de finanças pessoais. O objetivo é criar uma aplicação robusta que permita a usuários controlar suas finanças, registrar transações, criar metas e gerar relatórios, enquanto administradores mantêm o sistema organizado e monitoram o uso da plataforma.
 
-## 📌 Quadro Kanban (Trello)
+---
 
-O andamento do projeto está sendo acompanhado no Trello.  
+### 1. Criação de Protótipos de Lo-Fi (Figma)
+- Foram elaborados **sketches e storyboards** para representar o fluxo das histórias de usuário (**mínimo de 10 telas**).  
+- Protótipo Lo-Fi disponível no Figma: [🔗 Link para o Figma](#)  
+- **Screencast** apresentando o protótipo (com áudio/legenda): [🎥 Link para o vídeo](#)
+
+---
+
+### 2. Diagrama de Atividades do Sistema
+O diagrama de atividades (UML) mostra o fluxo principal do sistema.  
+- Disponível em: [📄 Link para o diagrama](#)  
+
+---
+
+### 3. Issue / Bug Tracker Atualizado (GitHub)
+Utilizamos o **GitHub Issues** para acompanhamento de tarefas, melhorias e bugs.  
+- **Print da tela do GitHub Issues:**  
+
+<img width="900" src="https://github.com/user-attachments/assets/xxxxxx" alt="Print Issues GitHub" />
+
+---
+
+### 4. Quadro Atualizado Refletindo a Entrega
+O andamento do projeto está sendo acompanhado no **Trello** (Kanban).  
+- **Print do quadro da sprint atual:**  
+
+<img width="900" src="https://github.com/user-attachments/assets/0e964bc7-95b1-44df-a0ce-a4931e1eaa3b" alt="Quadro Sprint" />
+
+- **Print do backlog:**  
+
+<img width="204" height="491" alt="image" src="https://github.com/user-attachments/assets/598ac91c-106b-43c7-bc40-888b70f13301" />
 
 
-<img width="1676" height="555" alt="Captura de tela 2025-09-08 191116" src="https://github.com/user-attachments/assets/0e964bc7-95b1-44df-a0ce-a4931e1eaa3b" />
+---
 
 ## 📝 Descrição do Projeto
 
 A API serve como backend de uma aplicação de finanças pessoais. Usuários podem registrar receitas e despesas, organizar suas movimentações por categorias, acompanhar metas de economia e visualizar relatórios financeiros. Administradores gerenciam categorias, configuram limites, acompanham estatísticas e garantem a integridade dos dados. O projeto segue metodologia ágil, com histórias de usuário organizadas em um quadro Kanban.
+
+---
 
 ## ✨ Funcionalidades (Histórias de Usuário)
 
@@ -33,21 +64,22 @@ A API serve como backend de uma aplicação de finanças pessoais. Usuários pod
 - **Validação de Dados:** Gerenciar regras para garantir consistência dos registros financeiros. (Sprint 2)
 - **Estatísticas de Uso:** Acompanhar crescimento de usuários e atividades. (Sprint 3)
 
+---
+
 ## 🛠️ Estrutura da API (Endpoints)
 
 | Método | Rota                     | Descrição                                        | Responsável(eis)         |
 | :----- | :----------------------- | :-----------------------------------------------| :----------------------- |
 | `POST` | `/users`                 | Cadastra um novo usuário                        | Lucciano                 |
-| `GET`  | `/users/:id/accounts`     | Lista os registros financeiros de um usuário            | Júlio                    |
-| `POST` | `/transactions`          | Registra uma nova receita ou despesa             | Felipe                   |
-| `GET`  | `/transactions`          | Lista todas as movimentações filtradas por critérios| Artur                   |
+| `GET`  | `/users/:id/accounts`     | Lista os registros financeiros de um usuário    | Júlio                    |
+| `POST` | `/transactions`          | Registra uma nova receita ou despesa            | Felipe                   |
+| `GET`  | `/transactions`          | Lista todas as movimentações filtradas por critérios | Artur               |
 | `POST` | `/categories`            | Cadastra categorias de receita/despesa          | Davi                     |
 | `GET`  | `/reports`               | Gera relatórios financeiros agregados           | Daniel                   |
-| `PATCH`| `/limits/:categoryId`    | Define o limite planejado de gastos para uma categoria   | Lucciano                 |
+| `PATCH`| `/limits/:categoryId`    | Define o limite planejado de gastos para uma categoria | Lucciano           |
 | `GET`  | `/statistics`            | Consulta estatísticas gerais do sistema         | Júlio                    |
 
-### Banco de Dados
-- **Modelo e Conexão:** Criação do modelo de dados e conexão com o banco de dados: **Daniel**.
+---
 
 ## 👥 Equipe do Projeto
 
@@ -58,6 +90,8 @@ A API serve como backend de uma aplicação de finanças pessoais. Usuários pod
 - Júlio César Bizarria Lins – Visualização de saldos consolidados, relatórios e estatísticas.  
 - Lucciano Henrique Pereira Cordeiro – Cadastro de usuários e configuração de limites.  
 
+---
+
 ## 📊 Status do Projeto
 
-O projeto encontra-se em fase de desenvolvimento. As tarefas estão sendo distribuídas e executadas conforme o planejamento inicial, visualizável no quadro do Trello. O foco atual está na construção das rotas essenciais da API, registro de transações e modelagem do banco de dados.
+O projeto encontra-se em fase de desenvolvimento. As tarefas estão sendo distribuídas e executadas conforme o planejamento inicial. O foco atual está na construção das rotas essenciais da API, registro de transações e modelagem do banco de dados.  
