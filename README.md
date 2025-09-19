@@ -21,20 +21,24 @@ O diagrama de atividades (UML) mostra o fluxo principal do sistema.
 Utilizamos o **GitHub Issues** para acompanhamento de tarefas, melhorias e bugs.  
 - **Print da tela do GitHub Issues:**  
 
-<img width="900" src="https://github.com/user-attachments/assets/xxxxxx" alt="Print Issues GitHub" />
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/88cc925e-7f1f-4928-acf4-96de2e54c1cb" alt="Print Issues GitHub" width="80%">
+</div>
 
 ---
 
 ### 4. Quadro Atualizado Refletindo a Entrega
-O andamento do projeto está sendo acompanhado no **Trello** (Kanban).  
-- **Print do quadro da sprint atual:**  
+O andamento do projeto está sendo acompanhado no **Trello (Kanban)**.  
 
-<img width="900" src="https://github.com/user-attachments/assets/0e964bc7-95b1-44df-a0ce-a4931e1eaa3b" alt="Quadro Sprint" />
+- **Print do quadro da sprint atual:**  
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/0e964bc7-95b1-44df-a0ce-a4931e1eaa3b" alt="Quadro Sprint" width="80%">
+</div>
 
 - **Print do backlog:**  
-
-<img width="204" height="491" alt="image" src="https://github.com/user-attachments/assets/598ac91c-106b-43c7-bc40-888b70f13301" />
-
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/598ac91c-106b-43c7-bc40-888b70f13301" alt="Backlog" width="40%">
+</div>
 
 ---
 
@@ -94,4 +98,4 @@ A API serve como backend de uma aplicação de finanças pessoais. Usuários pod
 
 ## 📊 Status do Projeto
 
-O projeto encontra-se em fase de desenvolvimento. As tarefas estão sendo distribuídas e executadas conforme o planejamento inicial. O foco atual está na construção das rotas essenciais da API, registro de transações e modelagem do banco de dados.  
+O projeto encontra-se em fase de desenvolvimento. As tarefas estão sendo distribuídas e executadas conforme o planejamento inicial. O foco atual está na construção das rotas essenciais da API, registro de transações e modelagem do banco de dados.
