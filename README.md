@@ -13,7 +13,7 @@ Este repositório contém o código-fonte da API para um sistema de finanças pe
 
 ### 2. Diagrama de Atividades do Sistema
 O diagrama de atividades (UML) mostra o fluxo principal do sistema.  
-- Disponível em: [📄 https://www.canva.com/design/DAGzXx5oU2g/MB8qpBIqOr_yTKBBR08SCg/edit?utm_content=DAGzXx5oU2g&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton](#)  
+- Disponível em: [📄Link para o Canva](https://www.canva.com/design/DAGzXx5oU2g/MB8qpBIqOr_yTKBBR08SCg/edit?utm_content=DAGzXx5oU2g&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)  
 
 ---
 
