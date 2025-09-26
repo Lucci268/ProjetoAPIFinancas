@@ -7,7 +7,7 @@ Este repositório contém o código-fonte da API para um sistema de finanças pe
 ### 1. Criação de Protótipos de Lo-Fi (Figma)
 - Foram elaborados **sketches e storyboards** para representar o fluxo das histórias de usuário (**mínimo de 10 telas**).  
 - Protótipo Lo-Fi disponível no Figma: [🔗 Link para o Figma](https://www.figma.com/design/jufpasxokV5zpu8cvFCZ25/Cash-?node-id=0-1&t=zuDA5kGo0uqpAJZK-1)  
-- **Screencast** apresentando o protótipo (com áudio/legenda): [🎥 Link para o vídeo](#)
+- **Screencast** apresentando o protótipo: [🎥 Link para o vídeo](https://github.com/user-attachments/assets/ff81ff60-9067-4536-a611-31549dc60490)
 
 ---
 
