@@ -23,8 +23,12 @@ Utilizamos o **GitHub Issues** para acompanhamento de tarefas, melhorias e bugs.
 
 <div align="center">
   <img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180235.png?raw=true" alt="Print Issues GitHub" width="80%">
+  
 </div>
-
+<div align="center">
+<img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180330.png?raw=true" alt="Print Issues GitHub" width="80%">
+  
+</div>
 ---
 
 ### 4. Quadro Atualizado Refletindo a Entrega
