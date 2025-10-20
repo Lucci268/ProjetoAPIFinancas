@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Cash+</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Gerenciamento de Categorias</h2>
+  <form id="formCat">
+    <input type="text" id="nomeCat" placeholder="Nome da categoria">
+    <select id="tipoCat">
+      <option value="receita">Receita</option>
+      <option value="despesa">Despesa</option>
+    </select>
+    <button type="submit">Adicionar</button>
+  </form>
+  <ul id="lista"></ul>
+  <script>
+    function carregarCategorias() {
+      fetch("http://localhost:3000/api/admin/categorias")
+        .then(r => r.json())
+        .then(categorias => {
+          const lista = document.getElementById("lista");
+          lista.innerHTML = "";
+          categorias.forEach(c => {
+            const li = document.createElement("li");
+            li.textContent = `${c.nome} (${c.tipo})`;
+            lista.appendChild(li);
+          });
+        });
+    }
+
+    document.getElementById("formCat").addEventListener("submit", e => {
+      e.preventDefault();
+      fetch("http://localhost:3000/api/admin/categorias", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: document.getElementById("nomeCat").value,
+          tipo: document.getElementById("tipoCat").value
+        })
+      }).then(() => carregarCategorias());
+    });
+
+    carregarCategorias();
+  </script>
+</body>
+</html>
