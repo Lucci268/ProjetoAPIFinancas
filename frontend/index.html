@@ -1,52 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Finanças Pessoais</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Cash+ - Cadastro</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>💰 Finanças Pessoais</h1>
-  </header>
+  <h1>Cash+</h1>
+  <form id="cadastroForm">
+    <input type="text" placeholder="Telefone" id="telefone">
+    <input type="email" placeholder="Email" id="email">
+    <input type="password" placeholder="Senha" id="senha">
+    <button type="submit">Criar conta</button>
+  </form>
+  <p><a href="termos.html">Ver Termos de Uso</a></p>
+  <script src="script.js"></script>
+</body>
+</html>
 
-  <main>
-    <section class="resumo">
-      <div class="card total">
-        <h3>Saldo Total</h3>
-        <p id="saldo">R$ 0,00</p>
-      </div>
-      <div class="card entrada">
-        <h3>Entradas</h3>
-        <p id="entradas">R$ 0,00</p>
-      </div>
-      <div class="card saida">
-        <h3>Saídas</h3>
-        <p id="saidas">R$ 0,00</p>
-      </div>
-    </section>
-
-    <section class="transacoes">
-      <div class="header-transacoes">
-        <h2>Transações</h2>
-        <button id="abrirModal">+ Nova Transação</button>
-      </div>
-      <ul id="lista"></ul>
-    </section>
-  </main>
-
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <h3>Adicionar Transação</h3>
-      <form id="form">
-        <input type="text" id="descricao" placeholder="Descrição" required>
-        <input type="number" id="valor" placeholder="Valor (use negativo para saída)" required>
-        <button type="submit">Adicionar</button>
-      </form>
-      <button id="fecharModal" class="fechar">Fechar</button>
-    </div>
-  </div>
 
   <script src="script.js"></script>
 </body>
