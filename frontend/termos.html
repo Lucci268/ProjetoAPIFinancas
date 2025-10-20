@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Termos de Uso - Cash+</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Termos de Uso e Política de Privacidade</h2>
+  <div id="termos"></div>
+  <a href="index.html">Voltar</a>
+  <script>
+    fetch("http://localhost:3000/api/termos")
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById("termos").innerText = data.termos;
+      });
+  </script>
+</body>
+</html>
