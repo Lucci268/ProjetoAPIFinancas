@@ -1,132 +1,27 @@
-:root {
-  --verde: #4CAF50;
-  --vermelho: #e53935;
-  --cinza: #f2f2f2;
-  --fundo: #fff;
-}
-
 body {
-  font-family: "Poppins", sans-serif;
-  background: var(--cinza);
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  background: var(--verde);
+  font-family: Arial, sans-serif;
+  background-color: #0b0b0b;
   color: white;
-  padding: 20px;
-  text-align: center;
-}
-
-main {
-  max-width: 700px;
-  margin: 20px auto;
-  background: var(--fundo);
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.resumo {
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.card {
-  flex: 1;
-  background: #fff;
-  border-radius: 10px;
-  text-align: center;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.card.total { background: var(--verde); color: #fff; }
-.card.entrada { border-left: 4px solid var(--verde); }
-.card.saida { border-left: 4px solid var(--vermelho); }
-
-.header-transacoes {
-  display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
-#abrirModal {
-  background: var(--verde);
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-#lista {
-  list-style: none;
-  padding: 0;
-}
-
-#lista li {
-  background: #fff;
-  border-radius: 8px;
+input, select, button {
+  display: block;
   margin: 10px 0;
   padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#lista li.positivo { border-left: 4px solid var(--verde); }
-#lista li.negativo { border-left: 4px solid var(--vermelho); }
-
-#lista button {
+  border-radius: 8px;
   border: none;
-  background: transparent;
-  color: var(--vermelho);
-  font-size: 18px;
-  cursor: pointer;
+  width: 250px;
 }
 
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 300px;
-  text-align: center;
-}
-
-.modal-content input {
-  display: block;
-  width: 90%;
-  margin: 10px auto;
-  padding: 8px;
-}
-
-.modal-content button {
-  background: var(--verde);
+button {
+  background-color: #00c37a;
   color: white;
-  border: none;
-  padding: 8px 15px;
-  margin-top: 10px;
   cursor: pointer;
-  border-radius: 5px;
 }
 
-.fechar {
-  background: #ccc;
-  color: #000;
-  margin-top: 5px;
-}
 
