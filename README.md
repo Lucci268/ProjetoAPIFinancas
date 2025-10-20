@@ -22,7 +22,7 @@ Utilizamos o **GitHub Issues** para acompanhamento de tarefas, melhorias e bugs.
 - **Print da tela do GitHub Issues:**  
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/88cc925e-7f1f-4928-acf4-96de2e54c1cb" alt="Print Issues GitHub" width="80%">
+  <img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180235.png?raw=true" alt="Print Issues GitHub" width="80%">
 </div>
 
 ---
