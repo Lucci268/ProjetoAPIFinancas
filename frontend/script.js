@@ -1,59 +1,38 @@
-const api = "http://localhost:3000/transacoes";
-const lista = document.getElementById("lista");
-const form = document.getElementById("form");
-const modal = document.getElementById("modal");
-const abrirModal = document.getElementById("abrirModal");
-const fecharModal = document.getElementById("fecharModal");
-const saldoEl = document.getElementById("saldo");
-const entradasEl = document.getElementById("entradas");
-const saidasEl = document.getElementById("saidas");
+const api = "http://localhost:3000";
 
-abrirModal.onclick = () => modal.style.display = "flex";
-fecharModal.onclick = () => modal.style.display = "none";
+async function cadastrarUsuario(event) {
+  event.preventDefault();
+  const nome = document.getElementById("nome").value;
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
 
-async function carregar() {
-  const res = await fetch(api);
-  const dados = await res.json();
-  lista.innerHTML = "";
-  
-  let saldo = 0, entradas = 0, saidas = 0;
-  
-  dados.forEach((t, i) => {
-    const li = document.createElement("li");
-    li.classList.add(t.valor >= 0 ? "positivo" : "negativo");
-    li.innerHTML = `${t.descricao} <strong>R$ ${t.valor.toFixed(2)}</strong>`;
-    const btn = document.createElement("button");
-    btn.textContent = "🗑";
-    btn.onclick = async () => {
-      await fetch(`${api}/${i}`, { method: "DELETE" });
-      carregar();
-    };
-    li.appendChild(btn);
-    lista.appendChild(li);
-
-    if (t.valor >= 0) entradas += t.valor;
-    else saidas += t.valor;
-  });
-
-  saldo = entradas + saidas;
-  saldoEl.textContent = `R$ ${saldo.toFixed(2)}`;
-  entradasEl.textContent = `R$ ${entradas.toFixed(2)}`;
-  saidasEl.textContent = `R$ ${Math.abs(saidas).toFixed(2)}`;
-}
-
-form.onsubmit = async (e) => {
-  e.preventDefault();
-  const descricao = document.getElementById("descricao").value;
-  const valor = parseFloat(document.getElementById("valor").value);
-  await fetch(api, {
+  await fetch(`${api}/usuarios`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ descricao, valor })
+    body: JSON.stringify({ nome, email, senha })
   });
-  form.reset();
-  modal.style.display = "none";
-  carregar();
-};
+  alert("Usuário cadastrado com sucesso!");
+}
 
-carregar();
+async function carregarTermos() {
+  const resposta = await fetch(`${api}/termos`);
+  const termos = await resposta.json();
+  document.getElementById("conteudo-termos").innerText = termos[0].conteudo;
+}
+
+async function loginAdmin(event) {
+  event.preventDefault();
+  const usuario = document.getElementById("usuario").value;
+  const senha = document.getElementById("senha").value;
+  const resposta = await fetch(`${api}/admin`);
+  const admins = await resposta.json();
+
+  const encontrado = admins.find(a => a.usuario === usuario && a.senha === senha);
+  if (encontrado) {
+    alert("Login de administrador bem-sucedido!");
+    window.location.href = "admin.html";
+  } else {
+    alert("Usuário ou senha incorretos.");
+  }
+}
 
