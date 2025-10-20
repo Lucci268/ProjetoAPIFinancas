@@ -36,7 +36,8 @@ O andamento do projeto está sendo acompanhado no **Trello (Kanban)**.
 
 - **Print do quadro da sprint atual:**  
 <div align="center">
-  <img width="1587" height="611" alt="image" src="https://github.com/user-attachments/assets/66dbde10-7cc9-4d4b-b88b-bba3b65fb13a" />
+  <img <img width="1493" height="681" alt="image" src="https://github.com/user-attachments/assets/97897e73-8195-4f33-804c-fdb5e38f0683" />
+ />
 
 
 
