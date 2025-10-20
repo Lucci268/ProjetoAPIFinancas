@@ -1,25 +1,48 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Cash+ - Cadastro</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash+ - Bem-vindo</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Cash+</h1>
-  <form id="cadastroForm">
-    <input type="text" placeholder="Telefone" id="telefone">
-    <input type="email" placeholder="Email" id="email">
-    <input type="password" placeholder="Senha" id="senha">
-    <button type="submit">Criar conta</button>
-  </form>
-  <p><a href="termos.html">Ver Termos de Uso</a></p>
-  <script src="script.js"></script>
-</body>
-</html>
+    <h1>Cash+</h1>
+    
+    <div id="forms-container">
+        
+        <div id="switch-buttons">
+            <button id="showCadastro" class="active">Cadastro</button>
+            <button id="showLogin">Login</button>
+            <button id="showAdmin">Admin</button>
+        </div>
 
+        <form id="cadastroForm">
+            <h2>Criar Conta</h2>
+            <input type="text" placeholder="Telefone" id="telefone">
+            <input type="email" placeholder="Email" id="email">
+            <input type="password" placeholder="Senha" id="senha">
+            <button type="submit">Criar conta</button>
+        </form>
 
-  <script src="script.js"></script>
+        <form id="loginForm" class="hidden">
+            <h2>Acesso do Usuário</h2>
+            <input type="email" placeholder="Email" id="loginEmail">
+            <input type="password" placeholder="Senha" id="loginSenha">
+            <button type="submit">Entrar</button>
+        </form>
+
+        <form id="adminForm" class="hidden">
+            <h2>Acesso do Administrador</h2>
+            <input type="text" placeholder="Usuário Admin" id="usuarioAdmin">
+            <input type="password" placeholder="Senha Admin" id="senhaAdmin">
+            <button type="submit">Acessar Painel</button>
+        </form>
+    </div>
+
+    <p><a href="termos.html">Ver Termos de Uso</a></p>
+    
+    <script src="script.js"></script>
 </body>
 </html>
 
