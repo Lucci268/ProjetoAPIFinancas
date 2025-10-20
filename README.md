@@ -99,7 +99,12 @@ A API serve como backend de uma aplicação de finanças pessoais. Usuários pod
 - Davi Magalhães Mendes – Categorias de receitas e despesas.  
 - Felipe Assis Ferreira dos Santos – Registro de transações.  
 - Júlio César Bizarria Lins – Visualização de saldos consolidados, relatórios e estatísticas.  
-- Lucciano Henrique Pereira Cordeiro – Cadastro de usuários e configuração de limites.  
+- Lucciano Henrique Pereira Cordeiro – Cadastro de usuários e configuração de limites.
+
+
+## Patch Note
+0.1.0-alpha.1
+Disponível em: [📄Link para Screen catch](https://youtu.be/feqsMQkV2AM)
 
 ---
 
