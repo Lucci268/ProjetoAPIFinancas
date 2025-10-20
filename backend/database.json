@@ -1,7 +1,29 @@
 {
-  "usuarios": [],
-  "categorias": [
-    { "nome": "Alimentação", "tipo": "despesa" },
-    { "nome": "Salário", "tipo": "receita" }
-  ]
+  "usuarios": [
+    {
+      "telefone": "82994165810",
+      "email": "lhpc2808@gmail.com",
+      "senha": "280803"
+    },
+    {
+      "telefone": "82994165810",
+      "email": "lhpc2808@gmail.com",
+      "senha": "280803"
+    }
+  ],
+  "termos": [
+    {
+      "id": 1,
+      "titulo": "Termos de Uso",
+      "conteudo": "Ao usar este sistema, você concorda com nossas políticas de privacidade e uso responsável."
+    }
+  ],
+  "admin": [
+    {
+      "id": 1,
+      "usuario": "admin",
+      "senha": "1234"
+    }
+  ],
+  "categorias": []
 }
