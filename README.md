@@ -104,6 +104,7 @@ A API serve como backend de uma aplicação de finanças pessoais. Usuários pod
 
 ## Patch Note
 0.1.0-alpha.1
+
 Disponível em: [📄Link para Screen catch](https://youtu.be/feqsMQkV2AM)
 
 ---
