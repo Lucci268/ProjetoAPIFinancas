@@ -10,6 +10,18 @@
 
 ---
 
+## ✨ Contribuidores
+
+<div align="center">
+
+| [<img src="https://avatars.githubusercontent.com/u/169162600?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/ArturLima33) | [<img src="https://avatars.githubusercontent.com/u/169162345?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/D4n1el20) | [<img src="https://avatars.githubusercontent.com/u/163533321?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/Cyvier) | [<img src="https://avatars.githubusercontent.com/u/169077824?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/felipeassiss) | [<img src="https://avatars.githubusercontent.com/u/169167613?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/JulioCesarLinss) | [<img src="https://avatars.githubusercontent.com/u/169167539?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/Lucci268) |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| **Artur Lima** | **Daniel Silva** | **Davi Magalhães** | **Felipe Assis** | **Júlio Lins** | **Lucciano Cordeiro** |
+
+</div>
+
+---
+
 Este repositório contém o código-fonte da API para um sistema de finanças pessoais. O objetivo é criar uma aplicação robusta que permita a usuários controlar suas finanças, registrar transações, criar metas e gerar relatórios, enquanto administradores mantêm o sistema organizado e monitoram o uso da plataforma.
 
 ---
@@ -99,7 +111,7 @@ A API serve como backend de uma aplicação de finanças pessoais. Usuários pod
 
 ---
 
-## 👥 Equipe do Projeto
+## 👥 Atribuições
 
 | Nome Completo | Responsabilidades |
 |----------------|-------------------|
@@ -124,12 +136,4 @@ O projeto encontra-se em fase de desenvolvimento. As tarefas estão sendo distri
 
 ---
 
-## ✨ Contribuidores
 
-<div align="center">
-
-| [<img src="https://avatars.githubusercontent.com/u/169162600?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/ArturLima33) | [<img src="https://avatars.githubusercontent.com/u/169162345?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/D4n1el20) | [<img src="https://avatars.githubusercontent.com/u/163533321?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/Cyvier) | [<img src="https://avatars.githubusercontent.com/u/169077824?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/felipeassiss) | [<img src="https://avatars.githubusercontent.com/u/169167613?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/JulioCesarLinss) | [<img src="https://avatars.githubusercontent.com/u/169167539?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/Lucci268) |
-|:--:|:--:|:--:|:--:|:--:|:--:|
-| **Artur Lima** | **Daniel Silva** | **Davi Magalhães** | **Felipe Assis** | **Júlio Lins** | **Lucciano Cordeiro** |
-
-</div>
