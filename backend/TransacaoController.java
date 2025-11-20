@@ -34,9 +34,7 @@ public class TransacaoController {
         @RequestParam(required = false) BigDecimal valorMin,
         @RequestParam(required = false) BigDecimal valorMax) {
 
-        if (userId == null) {
-            return ResponseEntity.status(401).build();
-        }
+        if (userId == null) return ResponseEntity.status(401).build();
 
         List<Transacao> transacoes = transacaoService.buscarComFiltros(
             userId, tipo, categoriaId, dataInicio, dataFim, valorMin, valorMax
