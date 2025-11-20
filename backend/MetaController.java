@@ -40,4 +40,12 @@ public class MetaController {
         if (!removida) return ResponseEntity.notFound().build();
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/goals/{id}")
+public ResponseEntity<Meta> editarMeta(@PathVariable Long id, @RequestBody Meta meta) {
+    Meta atualizada = metaService.atualizarMeta(id, meta);
+    if (atualizada == null) return ResponseEntity.status(404).build();
+    return ResponseEntity.ok(atualizada);
 }
+
+}
+
