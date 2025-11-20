@@ -41,4 +41,32 @@ public class TransacaoController {
         );
         return ResponseEntity.ok(transacoes);
     }
+
+    @GetMapping("/transactions/search")
+public ResponseEntity<List<Transacao>> buscarTransacoes(
+    @RequestParam Long userId,
+    @RequestParam(required = false) String termo,
+    @RequestParam(required = false) String ordenarPor
+) {
+    List<Transacao> resultados = transacaoService.pesquisarTransacoes(userId, termo, ordenarPor);
+    return ResponseEntity.ok(resultados);
 }
+
+    @DeleteMapping("/transactions/{id}")
+public ResponseEntity<?> deletarTransacao(@PathVariable Long id) {
+    boolean removido = transacoes.removeIf(t -> t.getId().equals(id));
+    if (!removido) return ResponseEntity.status(404).body("Transação não encontrada");
+    return ResponseEntity.ok().build();
+}
+
+    @GetMapping("/transactions/{id}")
+public ResponseEntity<Transacao> detalhesTransacao(@PathVariable Long id) {
+    Transacao t = transacoes.stream().filter(tr -> tr.getId().equals(id)).findFirst().orElse(null);
+    if (t == null) return ResponseEntity.status(404).build();
+    Categoria cat = categoriaService.buscarPorId(t.getCategoriaId());
+    t.setNomeCategoria(cat != null ? cat.getNome() : "Sem Categoria");
+    return ResponseEntity.ok(t);
+}
+
+}
+
