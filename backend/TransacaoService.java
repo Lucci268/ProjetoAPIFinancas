@@ -37,6 +37,7 @@ public class TransacaoService {
             BigDecimal valorMax) {
 
         List<Transacao> filtradas = transacoes.stream()
+            .filter(t -> userId == null || t.getUserId().equals(userId))
             .filter(t -> t.getUserId().equals(userId))
             .filter(t -> tipo == null || t.getTipo().equalsIgnoreCase(tipo))
             .filter(t -> categoriaId == null || t.getCategoriaId().equals(categoriaId))
@@ -61,3 +62,4 @@ public class TransacaoService {
         }).collect(Collectors.toList());
     }
 }
+
