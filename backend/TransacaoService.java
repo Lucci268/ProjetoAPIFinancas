@@ -61,5 +61,22 @@ public class TransacaoService {
             return c;
         }).collect(Collectors.toList());
     }
+
+    public List<Transacao> pesquisarTransacoes(Long userId, String termo, String ordenarPor) {
+    return transacoes.stream()
+        .filter(t -> t.getUserId().equals(userId))
+        .filter(t -> termo == null || t.getDescricao().toLowerCase().contains(termo.toLowerCase()))
+        .sorted((a, b) -> {
+            if ("data".equalsIgnoreCase(ordenarPor)) {
+                return a.getData().compareTo(b.getData());
+            } else if ("valor".equalsIgnoreCase(ordenarPor)) {
+                return a.getValor().compareTo(b.getValor());
+            }
+            return 0;
+        })
+        .collect(Collectors.toList());
 }
+
+}
+
 
