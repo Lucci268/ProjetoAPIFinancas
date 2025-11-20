@@ -24,8 +24,20 @@ public class MetaController {
     @GetMapping("/goals")
     public ResponseEntity<List<Meta>> buscarMetas(@RequestParam Long userId) {
         if (userId == null) return ResponseEntity.status(401).build();
+        return ResponseEntity.ok(metaService.buscarPorUserId(userId));
+    }
 
-        List<Meta> metas = metaService.buscarPorUserId(userId);
-        return ResponseEntity.ok(metas);
+    @PutMapping("/goals/{id}")
+    public ResponseEntity<Meta> atualizarMeta(@PathVariable Long id, @RequestBody Meta dados) {
+        Meta atualizada = metaService.atualizarMeta(id, dados);
+        if (atualizada == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(atualizada);
+    }
+
+    @DeleteMapping("/goals/{id}")
+    public ResponseEntity<Void> deletarMeta(@PathVariable Long id) {
+        boolean removida = metaService.deletar(id);
+        if (!removida) return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
     }
 }
