@@ -35,5 +35,9 @@ public class UserService {
         if (!passwordEncoder.matches(senha, user.getSenha())) return null;
         return user;
     }
+
+    public List<User> buscarTodos() {
+    return users;
+}
 }
 
