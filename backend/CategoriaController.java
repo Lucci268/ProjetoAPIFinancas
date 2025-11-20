@@ -19,7 +19,7 @@ public class CategoriaController {
     public ResponseEntity<List<Categoria>> listarCategorias() {
         return ResponseEntity.ok(categoriaService.buscarTodas());
     }
-    
+
     @PostMapping("/categorias")
     public ResponseEntity<Categoria> criarCategoria(@RequestBody Categoria categoria) {
         Categoria novaCat = categoriaService.criar(categoria);
