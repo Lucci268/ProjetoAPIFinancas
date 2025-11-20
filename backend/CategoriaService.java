@@ -12,7 +12,7 @@ public class CategoriaService {
     private final List<Categoria> categorias = new ArrayList<>(Arrays.asList(
         new Categoria() {{ setId(1L); setNome("Salário"); setTipo("receita"); }},
         new Categoria() {{ setId(2L); setNome("Aluguel"); setTipo("despesa"); }},
-        new Categoria() {{ setId(3L); setNome("Supermercado"); setTipo("despesa"); }}
+        new Categoria() {{ setId(3L); setId(3L); setNome("Supermercado"); setTipo("despesa"); }}
     ));
     private final AtomicLong nextId = new AtomicLong(4);
 
@@ -25,7 +25,7 @@ public class CategoriaService {
     public List<Categoria> buscarTodas() {
         return categorias;
     }
-    
+
     public Categoria buscarPorId(Long id) {
         return categorias.stream().filter(c -> c.getId().equals(id)).findFirst().orElse(null);
     }
