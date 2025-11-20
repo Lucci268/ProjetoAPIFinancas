@@ -36,19 +36,18 @@ public class MetaService {
             .orElse(null);
     }
 
-    public Meta atualizarMeta(Long id, Meta dados) {
-        Meta meta = buscarPorId(id);
-        if (meta == null) return null;
-
-        if (dados.getDescricao() != null) meta.setDescricao(dados.getDescricao());
-        if (dados.getValorMeta() != null) meta.setValorMeta(dados.getValorMeta());
-        if (dados.getValorAtual() != null) meta.setValorAtual(dados.getValorAtual());
-        if (dados.getDataAlvo() != null) meta.setDataAlvo(dados.getDataAlvo());
-
-        return meta;
+    public Meta atualizarMeta(Long id, Meta novaMeta) {
+    Meta meta = metas.stream().filter(m -> m.getId().equals(id)).findFirst().orElse(null);
+    if (meta != null) {
+        if (novaMeta.getDescricao() != null) meta.setDescricao(novaMeta.getDescricao());
+        if (novaMeta.getValorMeta() != null) meta.setValorMeta(novaMeta.getValorMeta());
+        if (novaMeta.getDataAlvo() != null) meta.setDataAlvo(novaMeta.getDataAlvo());
     }
+    return meta;
+}
 
     public boolean deletar(Long id) {
         return metas.removeIf(m -> m.getId().equals(id));
     }
 }
+
