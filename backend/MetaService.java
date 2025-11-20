@@ -2,7 +2,6 @@ package com.cashplus.service;
 
 import com.cashplus.model.Meta;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class MetaService {
     public Meta salvar(Meta meta) {
         meta.setId(nextId.getAndIncrement());
         if (meta.getValorAtual() == null) meta.setValorAtual(BigDecimal.ZERO);
-        if (meta.getDataAlvo() == null) meta.setDataAlvo(LocalDate.now().plusMonths(6)); 
+        if (meta.getDataAlvo() == null) meta.setDataAlvo(LocalDate.now().plusMonths(6));
         metas.add(meta);
         return meta;
     }
@@ -30,11 +29,26 @@ public class MetaService {
             .collect(Collectors.toList());
     }
 
-    public Meta atualizarProgresso(Long id, BigDecimal novoValor) {
-        Meta meta = metas.stream().filter(m -> m.getId().equals(id)).findFirst().orElse(null);
-        if (meta != null) {
-            meta.setValorAtual(novoValor);
-        }
+    public Meta buscarPorId(Long id) {
+        return metas.stream()
+            .filter(m -> m.getId().equals(id))
+            .findFirst()
+            .orElse(null);
+    }
+
+    public Meta atualizarMeta(Long id, Meta dados) {
+        Meta meta = buscarPorId(id);
+        if (meta == null) return null;
+
+        if (dados.getDescricao() != null) meta.setDescricao(dados.getDescricao());
+        if (dados.getValorMeta() != null) meta.setValorMeta(dados.getValorMeta());
+        if (dados.getValorAtual() != null) meta.setValorAtual(dados.getValorAtual());
+        if (dados.getDataAlvo() != null) meta.setDataAlvo(dados.getDataAlvo());
+
         return meta;
+    }
+
+    public boolean deletar(Long id) {
+        return metas.removeIf(m -> m.getId().equals(id));
     }
 }
