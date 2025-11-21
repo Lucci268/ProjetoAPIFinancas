@@ -1,9 +1,9 @@
 # 💸 Cash+ - API de Finanças Pessoais
 
 <div align="center">
-
-![Feito com HTML](https://img.shields.io/badge/Feito%20com-HTML%20%26%20CSS-orange?style=for-the-badge)
-![JavaScript](https://img.shields.io/badge/-JavaScript-yellow?style=for-the-badge)
+  
+![Feito com HTML](https://img.shields.io/badge/-React-blue?style=for-the-badge)
+![Java](https://img.shields.io/badge/-Java-yellow?style=for-the-badge)
 ![Projeto Acadêmico](https://img.shields.io/badge/📚-Projeto%20Acadêmico-success?style=for-the-badge)
 
 </div>
