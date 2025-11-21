@@ -42,26 +42,28 @@ Utilizamos o **GitHub Issues** para acompanhamento de tarefas, melhorias e bugs.
 - **Print da tela do GitHub Issues:**  
 
 <div align="center">
-  <img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180235.png?raw=true" alt="Print Issues GitHub" width="80%">
+  <img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180235.png?raw=true" alt="Print Issues GitHub" width="50%">
 </div>
 
 <div align="center">
-  <img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180330.png?raw=true" alt="Print Issues GitHub" width="80%">
+  <img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180330.png?raw=true" alt="Print Issues GitHub" width="50%">
 </div>
 
 ---
 
 ### 4. Quadro Atualizado Refletindo a Entrega
 O andamento do projeto está sendo acompanhado no **Trello (Kanban)**.  
-Aprsentação do trabalho com slides ,disponível no [Canva:](https://www.canva.com/design/DAG5VKDXrUU/1AMUgQZa77P80FfcCkxgHQ/edit?utm_content=DAG5VKDXrUU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+Apresentação do trabalho com slides ,disponível no [Canva:](https://www.canva.com/design/DAG5VKDXrUU/1AMUgQZa77P80FfcCkxgHQ/edit?utm_content=DAG5VKDXrUU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 - **Print do quadro da sprint atual:**  
+
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/97897e73-8195-4f33-804c-fdb5e38f0683" alt="Quadro da Sprint" width="80%">
+  <img src="https://github.com/user-attachments/assets/97897e73-8195-4f33-804c-fdb5e38f0683" alt="Quadro da Sprint" width="50%">
 </div>
 
 - **Print do backlog:**  
+
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/598ac91c-106b-43c7-bc40-888b70f13301" alt="Backlog" width="60%">
+  <img src="https://github.com/user-attachments/assets/598ac91c-106b-43c7-bc40-888b70f13301" alt="Backlog" width="20%">
 </div>
 
 ---
