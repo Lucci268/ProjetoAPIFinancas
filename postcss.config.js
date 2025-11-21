@@ -1,7 +1,7 @@
 export default {
   plugins: {
-    // ⚠️ Mude 'tailwindcss' para o pacote específico do plugin:
-    '@tailwindcss/postcss': {}, 
+    // ESTA É A CHAVE CORRETA:
+    'tailwindcss': {},
     'autoprefixer': {},
   },
 }
