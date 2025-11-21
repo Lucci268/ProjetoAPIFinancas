@@ -2,10 +2,10 @@
 
 <div align="center">
   
-![Feito com HTML](https://img.shields.io/badge/-React-blue?style=for-the-badge)
-![Java](https://img.shields.io/badge/-Java-yellow?style=for-the-badge)
-![Projeto Acadêmico](https://img.shields.io/badge/📚-Projeto%20Acadêmico-success?style=for-the-badge)
-
+![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge)
+![Java](https://img.shields.io/badge/Backend-Java-ED8B00?style=for-the-badge)
+![Spring Boot](https://img.shields.io/badge/Framework-Spring%20Boot-6DB33F?style=for-the-badge)
+![**Projeto Acadêmico**](https://img.shields.io/badge/📚-Projeto%20Acadêmico-success?style=for-the-badge)
 </div>
 
 ### ✨ Contribuidores
