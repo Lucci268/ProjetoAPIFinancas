@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Eye, EyeOff, ArrowRight, Home, ArrowLeftRight, 
   BarChart3, User, Plus, TrendingUp, TrendingDown,
-  Check, Trash2, X, LogOut, Camera, PiggyBank, UserPlus
+  Check, Trash2, X, LogOut, Camera, PiggyBank, UserPlus, Edit2, AlertCircle, CheckCircle, HelpCircle
 } from 'lucide-react';
 
 /* ------------------- UTILITÁRIOS & CONSTANTES ------------------- */
@@ -15,6 +15,12 @@ const CATEGORIES = {
   'Metas': { color: '#69F0AE', label: 'Metas/Economia' },
   'Outros': { color: '#90A4AE', label: 'Outros' }
 };
+
+const ALLOWED_EMAIL_DOMAINS = [
+  'gmail.com', 'outlook.com', 'yahoo.com', 'hotmail.com', 
+  'icloud.com', 'live.com', 'yahoo.com.br', 'uol.com.br',
+  'bol.com.br'
+];
 
 const parseDate = (dateStr) => {
   if (!dateStr) return new Date();
@@ -32,17 +38,69 @@ const Logo = ({ small = false }) => (
   </div>
 );
 
+const SystemPopup = ({ isOpen, onClose, type = 'success', title, message, onConfirm }) => {
+  if (!isOpen) return null;
+
+  const config = {
+    success: {
+      icon: <CheckCircle size={32} className="text-cashGreen" />,
+      color: 'border-cashGreen/50',
+      bgIcon: 'bg-cashGreen/10',
+      btn: 'bg-cashGreen text-black hover:bg-green-400'
+    },
+    error: {
+      icon: <AlertCircle size={32} className="text-red-500" />,
+      color: 'border-red-500/50',
+      bgIcon: 'bg-red-500/10',
+      btn: 'bg-red-500 text-white hover:bg-red-600'
+    },
+    confirm: {
+      icon: <HelpCircle size={32} className="text-yellow-500" />,
+      color: 'border-yellow-500/50',
+      bgIcon: 'bg-yellow-500/10',
+      btn: 'bg-yellow-500 text-black hover:bg-yellow-400'
+    }
+  };
+
+  const currentConfig = config[type] || config.success;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+      <div className={`bg-[#1E1E1E] border ${currentConfig.color} p-6 rounded-2xl w-full max-w-xs flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-300`}>
+        <div className={`w-16 h-16 ${currentConfig.bgIcon} rounded-full flex items-center justify-center mb-4`}>
+          {currentConfig.icon}
+        </div>
+        <h3 className="text-white text-xl font-bold mb-2">{title}</h3>
+        <p className="text-gray-400 text-sm mb-6 leading-relaxed">{message}</p>
+        
+        <div className="flex gap-3 w-full">
+          {type === 'confirm' && (
+            <button 
+              onClick={onClose}
+              className="flex-1 py-3 rounded-xl bg-gray-700 text-white font-bold hover:bg-gray-600 transition-all"
+            >
+              Cancelar
+            </button>
+          )}
+          <button 
+            onClick={() => {
+              if (onConfirm) onConfirm();
+              onClose();
+            }}
+            className={`flex-1 py-3 rounded-xl font-bold transition-all shadow-lg ${currentConfig.btn}`}
+          >
+            {type === 'confirm' ? 'Sim, confirmar' : 'Entendido'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const UserAvatar = ({ user, size = "w-10 h-10", textSize = "text-xs", showBorder = true }) => {
   const borderClass = showBorder ? "border-2 border-cashGreen" : "";
-  
   if (user.avatar) {
-    return (
-      <img 
-        src={user.avatar} 
-        alt="Profile" 
-        className={`${size} rounded-full object-cover ${borderClass} shadow-lg bg-gray-800`} 
-      />
-    );
+    return <img src={user.avatar} alt="Profile" className={`${size} rounded-full object-cover ${borderClass} shadow-lg bg-gray-800`} />;
   }
   return (
     <div className={`${size} rounded-full bg-gray-700 ${borderClass} flex items-center justify-center text-white font-bold ${textSize} shadow-lg`}>
@@ -217,7 +275,6 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
       <div className="mb-10 pl-2">
         <Logo small />
       </div>
-      
       <div className="mb-8 flex items-center gap-3 px-2">
          <UserAvatar user={user} size="w-10 h-10" />
          <div className="overflow-hidden">
@@ -227,7 +284,6 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
             </p>
          </div>
       </div>
-
       <nav className="flex-1 flex flex-col gap-2">
         {navItems.map((item) => (
           <button
@@ -244,7 +300,6 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
           </button>
         ))}
       </nav>
-
       <button onClick={onLogout} className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-900/10 rounded-xl text-sm font-bold mt-auto">
         <LogOut size={20} />
         Sair
@@ -257,7 +312,6 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
 
 const DashboardScreen = ({ user, transactions }) => {
   const [chartPeriod, setChartPeriod] = useState('mes');
-
   const income = transactions.filter(t => t.type === 'income').reduce((acc, curr) => acc + parseFloat(curr.value), 0);
   const expense = transactions.filter(t => t.type === 'expense').reduce((acc, curr) => acc + parseFloat(curr.value), 0);
   const balance = income - expense;
@@ -464,11 +518,12 @@ const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction
   );
 };
 
-const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal }) => {
+const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal, onEditGoal, showAlert }) => {
    const [isCreating, setIsCreating] = useState(false);
    const [newGoal, setNewGoal] = useState({ description: '', total: '', current: '0' });
    const [depositModal, setDepositModal] = useState({ isOpen: false, goalId: null });
    const [depositValue, setDepositValue] = useState('');
+   const [editModal, setEditModal] = useState({ isOpen: false, goal: null });
 
    const handleCreate = () => {
       if(!newGoal.description || !newGoal.total) return;
@@ -484,6 +539,24 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal }) => 
       setDepositValue('');
    };
 
+   const handleSaveEdit = () => {
+      if (!editModal.goal.description || !editModal.goal.total) return;
+      onEditGoal(editModal.goal);
+      setEditModal({ isOpen: false, goal: null });
+   };
+
+   const handleDeleteFromModal = () => {
+      showAlert(
+        'Excluir Meta?', 
+        `Tem certeza que deseja excluir a meta "${editModal.goal.description}"? O valor guardado será perdido.`, 
+        'confirm', 
+        () => {
+           onDeleteGoal(editModal.goal.id);
+           setEditModal({ isOpen: false, goal: null });
+        }
+      );
+   };
+
    return (
       <div className="px-6 md:px-0 pt-8 md:pt-0 pb-24 md:pb-0 h-full overflow-y-auto relative">
          <div className="flex items-center justify-between mb-8">
@@ -496,30 +569,37 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal }) => 
             />
          </div>
 
+         {/* Modal de Depósito */}
          {depositModal.isOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-               <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700">
+               <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700 animate-in fade-in zoom-in-95">
                   <h3 className="text-white font-bold text-lg mb-4">Guardar dinheiro</h3>
-                  <p className="text-gray-400 text-sm mb-4">Quanto deseja adicionar a esta meta? O valor será descontado do seu saldo principal.</p>
-                  <InputGroup 
-                     placeholder="Valor (ex: 50.00)" 
-                     type="number" 
-                     darkTheme 
-                     value={depositValue} 
-                     onChange={(e) => setDepositValue(e.target.value)} 
-                  />
+                  <p className="text-gray-400 text-sm mb-4">Quanto deseja adicionar a esta meta?</p>
+                  <InputGroup placeholder="Valor (ex: 50.00)" type="number" darkTheme value={depositValue} onChange={(e) => setDepositValue(e.target.value)} />
                   <div className="flex gap-3 mt-4">
-                     <button 
-                        onClick={() => setDepositModal({ isOpen: false, goalId: null })}
-                        className="flex-1 py-3 rounded-full text-gray-400 font-bold hover:bg-gray-800"
-                     >
-                        Cancelar
-                     </button>
-                     <button 
-                        onClick={confirmDeposit}
-                        className="flex-1 py-3 rounded-full bg-cashGreen text-black font-bold hover:bg-green-400"
-                     >
-                        Confirmar
+                     <button onClick={() => setDepositModal({ isOpen: false, goalId: null })} className="flex-1 py-3 rounded-full text-gray-400 font-bold hover:bg-gray-800">Cancelar</button>
+                     <button onClick={confirmDeposit} className="flex-1 py-3 rounded-full bg-cashGreen text-black font-bold hover:bg-green-400">Confirmar</button>
+                  </div>
+               </div>
+            </div>
+         )}
+
+         {/* Modal de Edição de Meta */}
+         {editModal.isOpen && editModal.goal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+               <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700 animate-in fade-in zoom-in-95">
+                  <div className="flex justify-between items-center mb-4">
+                     <h3 className="text-white font-bold text-lg">Editar Meta</h3>
+                     <button onClick={() => setEditModal({ isOpen: false, goal: null })} className="text-gray-400 hover:text-white"><X size={20} /></button>
+                  </div>
+                  
+                  <InputGroup label="Nome da Meta" darkTheme value={editModal.goal.description} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, description: e.target.value }})} />
+                  <InputGroup label="Valor Total (R$)" type="number" darkTheme value={editModal.goal.total} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, total: e.target.value }})} />
+
+                  <div className="flex flex-col gap-3 mt-6">
+                     <PrimaryButton label="Salvar Alterações" onClick={handleSaveEdit} />
+                     <button onClick={handleDeleteFromModal} className="w-full py-3 rounded-full bg-red-500/10 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2 border border-red-500/30">
+                        <Trash2 size={18} /> Excluir Meta
                      </button>
                   </div>
                </div>
@@ -559,14 +639,12 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal }) => 
                      <div className="flex justify-between mb-2 items-start">
                         <span className="text-white font-bold text-lg">{goal.description}</span>
                         <div className="flex gap-2">
-                           <button 
-                              onClick={() => setDepositModal({ isOpen: true, goalId: goal.id })}
-                              className="text-cashGreen bg-cashGreen/10 p-2 rounded-lg hover:bg-cashGreen hover:text-black transition-colors"
-                              title="Guardar dinheiro"
-                           >
+                           <button onClick={() => setDepositModal({ isOpen: true, goalId: goal.id })} className="text-cashGreen bg-cashGreen/10 p-2 rounded-lg hover:bg-cashGreen hover:text-black transition-colors" title="Guardar dinheiro">
                               <PiggyBank size={18}/>
                            </button>
-                           <button onClick={() => onDeleteGoal(goal.id)} className="text-gray-600 hover:text-red-500 transition-colors p-2"><X size={18}/></button>
+                           <button onClick={() => setEditModal({ isOpen: true, goal: goal })} className="text-gray-400 bg-gray-800 p-2 rounded-lg hover:bg-gray-700 hover:text-white transition-colors" title="Editar Meta">
+                              <Edit2 size={18} />
+                           </button>
                         </div>
                      </div>
                      <div className="flex justify-between mb-3 text-sm text-gray-400 font-medium">
@@ -584,7 +662,7 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal }) => 
    );
 };
 
-const ProfileScreen = ({ user, onUpdateUser }) => {
+const ProfileScreen = ({ user, onUpdateUser, showAlert }) => {
   const [formData, setFormData] = useState(user);
   const fileInputRef = useRef(null);
 
@@ -601,6 +679,12 @@ const ProfileScreen = ({ user, onUpdateUser }) => {
 
   const handleRemovePhoto = () => {
     setFormData({ ...formData, avatar: null });
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    onUpdateUser(formData);
+    showAlert('Sucesso!', 'Seu perfil foi atualizado com sucesso.', 'success');
   };
 
   return (
@@ -625,7 +709,7 @@ const ProfileScreen = ({ user, onUpdateUser }) => {
                )}
             </div>
          </div>
-         <form className="flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); onUpdateUser(formData); alert('Perfil salvo!'); }}>
+         <form className="flex flex-col gap-4" onSubmit={handleSave}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                <InputGroup label="Nome Completo" placeholder="Seu nome" darkTheme value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
                <InputGroup label="Email" placeholder="email@exemplo.com" type="email" darkTheme value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
@@ -646,6 +730,24 @@ function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isRegister, setIsRegister] = useState(false);
   const [authData, setAuthData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+
+  // ESTADO GLOBAL DO POPUP
+  const [popupConfig, setPopupConfig] = useState({ 
+    isOpen: false, 
+    type: 'success', 
+    title: '', 
+    message: '', 
+    onConfirm: null 
+  });
+
+  // Função helper para chamar o popup
+  const showAlert = (title, message, type = 'success', onConfirm = null) => {
+    setPopupConfig({ isOpen: true, title, message, type, onConfirm });
+  };
+
+  const closeAlert = () => {
+    setPopupConfig({ ...popupConfig, isOpen: false });
+  };
 
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('cashplus_user');
@@ -671,6 +773,11 @@ function App() {
   const handleAddGoal = (g) => setGoals([...goals, { ...g, id: Date.now() }]);
   const handleDeleteGoal = (id) => setGoals(goals.filter(g => g.id !== id));
 
+  const handleEditGoal = (updatedGoal) => {
+     const newGoals = goals.map(g => g.id === updatedGoal.id ? updatedGoal : g);
+     setGoals(newGoals);
+  };
+
   const handleDepositToGoal = (goalId, amount) => {
      const val = parseFloat(amount);
      const updatedGoals = goals.map(g => {
@@ -693,18 +800,25 @@ function App() {
   };
 
   const handleAuth = () => {
+     if(authData.email) {
+        const domain = authData.email.split('@')[1];
+        if(!domain || !ALLOWED_EMAIL_DOMAINS.includes(domain)) {
+           showAlert('Email inválido', `O domínio @${domain} não é permitido.`, 'error');
+           return;
+        }
+     }
+
      if (isRegister) {
        if (authData.password !== authData.confirmPassword) {
-         alert('As senhas não coincidem!');
+         showAlert('Erro', 'As senhas não coincidem!', 'error');
          return;
        }
        if (!authData.name) {
-         alert('Por favor, digite seu nome.');
+         showAlert('Atenção', 'Por favor, digite seu nome.', 'error');
          return;
        }
        setUser({ ...user, name: authData.name, email: authData.email });
      } else {
-       // Login sem backend real
        if(!user.name) setUser({ ...user, name: 'Usuário', email: authData.email || 'usuario@email.com' });
      }
      setCurrentScreen('app');
@@ -722,11 +836,11 @@ function App() {
         {(() => {
           switch(activeTab) {
              case 'dashboard': return <DashboardScreen user={user} transactions={transactions} />;
-             case 'perfil': return <ProfileScreen user={user} onUpdateUser={setUser} />;
+             case 'perfil': return <ProfileScreen user={user} onUpdateUser={setUser} showAlert={showAlert} />;
              case 'transacoes': return <TransactionScreen transactions={transactions} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} />;
              case 'createGoal': 
              case 'planejamento': 
-                return <PlanningScreen goals={goals} onAddGoal={handleAddGoal} onDeleteGoal={handleDeleteGoal} onDepositToGoal={handleDepositToGoal} />;
+                return <PlanningScreen goals={goals} onAddGoal={handleAddGoal} onDeleteGoal={handleDeleteGoal} onDepositToGoal={handleDepositToGoal} onEditGoal={handleEditGoal} showAlert={showAlert} />;
              default: return <DashboardScreen user={user} transactions={transactions} />;
           }
         })()}
@@ -737,62 +851,33 @@ function App() {
   if (currentScreen === 'login') {
     return (
       <div className="min-h-screen w-full bg-gradient-app flex items-center justify-center p-6">
+        
+        {/* POPUP GLOBAL PARA LOGIN */}
+        <SystemPopup 
+          isOpen={popupConfig.isOpen} 
+          onClose={closeAlert} 
+          type={popupConfig.type} 
+          title={popupConfig.title} 
+          message={popupConfig.message} 
+        />
+
         <div className="w-full max-w-md transition-all duration-500">
            <Logo />
-
            <form onSubmit={(e) => { e.preventDefault(); handleAuth(); }} className="flex flex-col px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             
              <h2 className="text-white text-2xl font-bold mb-6 text-center">
                {isRegister ? 'Crie sua conta' : 'Acesse sua conta'}
              </h2>
-
              {isRegister && (
-                <InputGroup 
-                  label="Nome Completo" 
-                  placeholder="Seu nome" 
-                  value={authData.name} 
-                  onChange={(e) => setAuthData({...authData, name: e.target.value})} 
-                />
+                <InputGroup label="Nome Completo" placeholder="Seu nome" value={authData.name} onChange={(e) => setAuthData({...authData, name: e.target.value})} />
              )}
-
-             <InputGroup 
-                label="Email" 
-                placeholder="seu@email.com" 
-                type="email" 
-                value={authData.email} 
-                onChange={(e) => setAuthData({...authData, email: e.target.value})} 
-             />
-             
-             <InputGroup 
-                label="Senha" 
-                placeholder="********" 
-                isPassword 
-                value={authData.password} 
-                onChange={(e) => setAuthData({...authData, password: e.target.value})} 
-             />
-
+             <InputGroup label="Email" placeholder="seu@email.com" type="email" value={authData.email} onChange={(e) => setAuthData({...authData, email: e.target.value})} />
+             <InputGroup label="Senha" placeholder="********" isPassword value={authData.password} onChange={(e) => setAuthData({...authData, password: e.target.value})} />
              {isRegister && (
-                <InputGroup 
-                  label="Confirmar Senha" 
-                  placeholder="********" 
-                  isPassword 
-                  value={authData.confirmPassword} 
-                  onChange={(e) => setAuthData({...authData, confirmPassword: e.target.value})} 
-                />
+                <InputGroup label="Confirmar Senha" placeholder="********" isPassword value={authData.confirmPassword} onChange={(e) => setAuthData({...authData, confirmPassword: e.target.value})} />
              )}
-
              <div className="flex flex-col gap-4 mt-6">
-               <PrimaryButton 
-                  label={isRegister ? "Cadastrar" : "Entrar"} 
-                  icon={isRegister ? <UserPlus size={20} /> : <ArrowRight size={20} />} 
-                  type="submit" 
-               />
-               
-               <button 
-                 type="button" 
-                 onClick={() => setIsRegister(!isRegister)}
-                 className="text-cashGreen font-bold text-sm hover:text-green-400 transition-colors mt-2"
-               >
+               <PrimaryButton label={isRegister ? "Cadastrar" : "Entrar"} icon={isRegister ? <UserPlus size={20} /> : <ArrowRight size={20} />} type="submit" />
+               <button type="button" onClick={() => setIsRegister(!isRegister)} className="text-cashGreen font-bold text-sm hover:text-green-400 transition-colors mt-2">
                  {isRegister ? "Já tem uma conta? Faça login" : "Não tem conta? Cadastre-se"}
                </button>
              </div>
@@ -804,6 +889,16 @@ function App() {
 
   return (
     <div className="min-h-screen w-full bg-[#0a0a0a] text-white font-sans flex">
+      {/* POPUP GLOBAL PARA APLICAÇÃO */}
+      <SystemPopup 
+        isOpen={popupConfig.isOpen} 
+        onClose={closeAlert} 
+        type={popupConfig.type} 
+        title={popupConfig.title} 
+        message={popupConfig.message} 
+        onConfirm={popupConfig.onConfirm}
+      />
+
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={handleLogout} user={user} transactions={transactions} />
       <main className="flex-1 md:ml-64 h-screen overflow-y-auto bg-gradient-app">
          <div className="max-w-7xl mx-auto md:p-10">
