@@ -2,49 +2,138 @@
 @tailwind components;
 @tailwind utilities;
 
+/* --- Configurações Globais --- */
 html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
   font-family: 'Inter', system-ui, sans-serif;
+  background-color: #0a0a0a;
+  color: white;
+  overflow-x: hidden;
 }
 
-@layer utilities {
-  /* cores do Tema */
-  .bg-cashDark { background-color: #0a0a0a; }
-  .text-cashDark { color: #0a0a0a; }
-  .bg-cashGreen { background-color: #00C853; }
-  .text-cashGreen { color: #00C853; }
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+.custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.1); border-radius: 20px; }
 
-  /* --- fundo --- */
+@layer utilities {
+  .bg-cashDark { background-color: #0a0a0a; }
+  .text-cashGreen { color: #00C853; }
+  .bg-cashGreen { background-color: #00C853; }
+
+  /* --- FUNDO DA TELA (Fixo e Suave) --- */
   .bg-gradient-app {
     background-color: #0a0a0a;
     background-image: 
-      radial-gradient(circle at top left, rgba(0, 200, 83, 0.15) 0%, transparent 45%),
-      radial-gradient(circle at bottom right, rgba(0, 200, 83, 0.10) 0%, transparent 45%);
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+      radial-gradient(circle at top left, rgba(0, 200, 83, 0.2) 0%, transparent 40%),
+      radial-gradient(circle at bottom right, rgba(0, 200, 83, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at center, rgba(0, 200, 83, 0.05) 0%, transparent 50%);
+    background-size: 300% 300%;
+    animation: moveBackgroundSlow 20s ease-in-out infinite alternate;
   }
 
-  /* --- sombras botoes --- */
+  /* --- FUNDO DO CARD (estilo degradê do app - SEU CÓDIGO MANTIDO) --- */
+  .card-gradient-animate {
+    position: relative;
+    background-color: #020b06;
+    overflow: hidden;
+  }
+
+  .card-gradient-animate::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      radial-gradient(circle at top left, rgba(17, 77, 45, 0.15), transparent 50%),
+      radial-gradient(circle at bottom right, rgba(11, 42, 26, 0.2), transparent 60%),
+      linear-gradient(45deg, #020b06 0%, #04160e 40%, #0b2a1a 70%, #020b06 100%);
+    background-size: 220% 220%;
+    animation: appGradientFlow 18s ease-in-out infinite;
+    opacity: 0.38;
+    pointer-events: none;
+  }
+
+  .btn-liquid {
+    background-image: linear-gradient(
+      45deg, 
+      #00C853,  /* Verde Padrão */
+      #00E676,  /* Verde Neon Claro */
+      #00b34a,  /* Verde Médio */
+      #69F0AE,  /* Verde Água */
+      #00C853   /* Volta ao padrão */
+    );
+    background-size: 300% 300%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 200, 83, 0.4), inset 0 0 10px rgba(255,255,255,0.1);
+    animation: liquidFlow 7s ease-in-out infinite;
+    color: #051a0f; 
+    text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  }
   
-  .shadow-neo-green {
-    box-shadow: 6px 6px 12px #050505, 
-                -6px -6px 12px #1a1a1a,
-                0 0 15px rgba(0, 200, 83, 0.3);
+  .btn-liquid:hover {
+    box-shadow: 0 6px 20px rgba(0, 230, 118, 0.6), inset 0 0 15px rgba(255,255,255,0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
   }
-  .shadow-neo-green-hover {
-    box-shadow: 8px 8px 16px #000000, 
-                -8px -8px 16px #1a1a1a,
-                0 0 20px rgba(0, 200, 83, 0.5);
-  }
-  .shadow-neo-inset-green {
-    box-shadow: inset 4px 4px 8px rgba(0, 150, 60, 0.8), 
-                inset -4px -4px 8px rgba(0, 255, 100, 0.8);
-  }
- 
-  /* --- sombra logo --- */
-  .shadow-neo-sm {
-    box-shadow: 0 4px 15px rgba(0, 200, 83, 0.2);
+
+  /* Sombras */
+  .shadow-neo-green { box-shadow: 0 0 15px rgba(0, 200, 83, 0.3); }
+  .shadow-neo-green-hover { box-shadow: 0 0 25px rgba(0, 200, 83, 0.5); }
+
+  /* --- Animações Gerais --- */
+  .animate-in { animation-duration: 0.6s; animation-fill-mode: both; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+  .fade-in { animation-name: fadeIn; }
+  .slide-in-from-bottom-4 { animation-name: slideUpSmall; }
+  .slide-in-from-bottom-8, .slide-in-from-bottom-10 { animation-name: slideUpBig; }
+  .slide-in-from-right-4, .slide-in-from-right-8 { animation-name: slideRight; }
+  .slide-in-from-left-4 { animation-name: slideLeft; }
+  .zoom-in-95 { animation-name: zoomIn; }
+  
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-700 { animation-delay: 700ms; }
+
+  /* --- Anel do Gráfico --- */
+  .chart-sliver-ring { position: relative; }
+  .chart-sliver-ring::before {
+    content: ''; position: absolute; inset: -6px; border-radius: 50%; z-index: -1;
+    background: conic-gradient(from 0deg, transparent 0%, rgba(255, 255, 255, 0.5) 10%, transparent 25%);
+    animation: rotateSliver 8s linear infinite;
+    mask: radial-gradient(farthest-side, transparent calc(100% - 2px), black calc(100% - 2px));
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), black calc(100% - 2px));
   }
 }
+
+/* --- KEYFRAMES --- */
+
+/* Movimento do fundo do app */
+@keyframes moveBackgroundSlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Movimento do fundo do card (estilo degradê do app) */
+@keyframes appGradientFlow {
+  0% { background-position: 40% 50%; }
+  50% { background-position: 60% 50%; }
+  100% { background-position: 40% 50%; }
+}
+
+/* Novo: Animação do Botão Liquid */
+@keyframes liquidFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes rotateSliver { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUpSmall { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUpBig { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }

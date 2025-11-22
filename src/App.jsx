@@ -31,7 +31,7 @@ const parseDate = (dateStr) => {
 /* ------------------- COMPONENTES UI ------------------- */
 
 const Logo = ({ small = false }) => (
-  <div className={`flex items-center gap-1 ${small ? 'justify-start' : 'justify-center mb-8'}`}>
+  <div className={`flex items-center gap-1 ${small ? 'justify-start' : 'justify-center mb-8'} animate-in fade-in duration-700`}>
     <span className={`text-white font-bold tracking-wide drop-shadow-sm ${small ? 'text-2xl' : 'text-4xl'}`}>
       Cash<span className="text-cashGreen">+</span>
     </span>
@@ -65,8 +65,8 @@ const SystemPopup = ({ isOpen, onClose, type = 'success', title, message, onConf
   const currentConfig = config[type] || config.success;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className={`bg-[#1E1E1E] border ${currentConfig.color} p-6 rounded-2xl w-full max-w-xs flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 duration-300`}>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+      <div className={`bg-[#1E1E1E] border ${currentConfig.color} p-6 rounded-2xl w-full max-w-xs flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 ease-out`}>
         <div className={`w-16 h-16 ${currentConfig.bgIcon} rounded-full flex items-center justify-center mb-4`}>
           {currentConfig.icon}
         </div>
@@ -87,7 +87,7 @@ const SystemPopup = ({ isOpen, onClose, type = 'success', title, message, onConf
               if (onConfirm) onConfirm();
               onClose();
             }}
-            className={`flex-1 py-3 rounded-xl font-bold transition-all shadow-lg ${currentConfig.btn}`}
+            className={`flex-1 py-3 rounded-xl font-bold transition-all shadow-lg active:scale-95 ${currentConfig.btn}`}
           >
             {type === 'confirm' ? 'Sim, confirmar' : 'Entendido'}
           </button>
@@ -126,7 +126,7 @@ const InputGroup = ({ label, type = 'text', placeholder, isPassword = false, dar
             ${darkTheme ? 'bg-[#2C2C2C] text-white placeholder-gray-500' : 'bg-white text-black placeholder-gray-400'}`}
         />
         {isPassword && (
-          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-500">
+          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-white transition-colors">
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         )}
@@ -139,17 +139,17 @@ const PrimaryButton = ({ label, icon, onClick, variant = 'primary', fullWidth = 
   <button
     onClick={onClick}
     type={type}
-    className={`${fullWidth ? 'w-full' : 'px-8'} h-12 rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]
+    className={`${fullWidth ? 'w-full' : 'px-8'} h-12 rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 active:scale-95
       ${variant === 'primary' 
-        ? 'bg-cashGreen text-white shadow-neo-green hover:shadow-neo-green-hover' 
-        : 'bg-[#2C2C2C] text-cashGreen border border-cashGreen hover:bg-opacity-80'}`}
+        ? 'btn-liquid'
+        : 'bg-[#2C2C2C] text-cashGreen border border-cashGreen hover:bg-opacity-80 hover:shadow-[0_0_15px_rgba(0,200,83,0.2)]'}`}
   >
     {label}
     {icon}
   </button>
 );
 
-/* ------------------- GRÁFICO ------------------- */
+/* ------------------- GRÁFICO (COM ANEL GIRATÓRIO) ------------------- */
 
 const ExpensePieChart = ({ transactions, period }) => {
   const filteredTransactions = transactions.filter(t => {
@@ -197,8 +197,8 @@ const ExpensePieChart = ({ transactions, period }) => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-center w-full h-full gap-6 md:gap-12">
-      <div className="relative w-40 h-40 md:w-44 md:h-44 rounded-full shadow-2xl flex-shrink-0"
+    <div className="flex flex-col md:flex-row items-center justify-center w-full h-full gap-6 md:gap-12 animate-in fade-in duration-700">
+      <div className="relative w-40 h-40 md:w-44 md:h-44 rounded-full shadow-2xl flex-shrink-0 transition-all duration-500 chart-sliver-ring"
            style={{ background: `conic-gradient(${gradientString})` }}>
          <div className="absolute inset-4 bg-[#1E1E1E] rounded-full flex items-center justify-center flex-col z-10">
             <span className="text-gray-400 text-[10px]">Total Gastos</span>
@@ -210,7 +210,7 @@ const ExpensePieChart = ({ transactions, period }) => {
       <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar min-w-[140px]">
         {legendData.length === 0 && <p className="text-gray-500 text-xs text-center">Sem gastos neste período.</p>}
         {legendData.map((item, idx) => (
-          <div key={idx} className="flex items-center justify-between gap-4 text-xs md:text-sm">
+          <div key={idx} className="flex items-center justify-between gap-4 text-xs md:text-sm animate-in slide-in-from-right-4 fade-in duration-500" style={{ animationDelay: `${idx * 100}ms` }}>
              <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
                 <span className="text-gray-300 truncate max-w-[80px]">{item.label}</span>
@@ -243,10 +243,10 @@ const BottomNav = ({ activeTab, setActiveTab }) => {
         <button
           key={item.id}
           onClick={() => setActiveTab(item.id)}
-          className={`flex flex-col items-center gap-1 transition-colors ${
+          className={`flex flex-col items-center gap-1 transition-all duration-300 ${
             item.isFloat 
-              ? 'bg-cashGreen text-white p-3 rounded-full -mt-8 shadow-neo-green border-4 border-[#0a0a0a]' 
-              : activeTab === item.id ? 'text-cashGreen' : 'text-gray-500 hover:text-gray-300'
+              ? 'bg-cashGreen text-white p-3 rounded-full -mt-8 shadow-neo-green border-4 border-[#0a0a0a] active:scale-90' 
+              : activeTab === item.id ? 'text-cashGreen scale-110' : 'text-gray-500 hover:text-gray-300'
           }`}
         >
           {item.icon}
@@ -275,7 +275,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
       <div className="mb-10 pl-2">
         <Logo small />
       </div>
-      <div className="mb-8 flex items-center gap-3 px-2">
+      <div className="mb-8 flex items-center gap-3 px-2 animate-in fade-in slide-in-from-left-4 duration-700">
          <UserAvatar user={user} size="w-10 h-10" />
          <div className="overflow-hidden">
             <p className="text-white text-sm font-bold truncate">{user.name}</p>
@@ -289,10 +289,10 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-sm ${
               activeTab === item.id 
-                ? 'bg-cashGreen/10 text-cashGreen font-bold' 
-                : 'text-gray-400 hover:bg-[#1a1a1a] hover:text-white'
+                ? 'bg-cashGreen/10 text-cashGreen font-bold translate-x-2' 
+                : 'text-gray-400 hover:bg-[#1a1a1a] hover:text-white hover:translate-x-1'
             }`}
           >
             {item.icon}
@@ -300,7 +300,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
           </button>
         ))}
       </nav>
-      <button onClick={onLogout} className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-900/10 rounded-xl text-sm font-bold mt-auto">
+      <button onClick={onLogout} className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-900/10 rounded-xl text-sm font-bold mt-auto transition-colors">
         <LogOut size={20} />
         Sair
       </button>
@@ -318,7 +318,8 @@ const DashboardScreen = ({ user, transactions }) => {
 
   return (
     <div className="pb-24 md:pb-0">
-      <div className="md:hidden bg-gradient-to-b from-[#00331b] to-[#0a0a0a] p-6 rounded-b-3xl shadow-lg mb-6">
+      {/* Header Mobile (com classe card-gradient-animate aplicada) */}
+      <div className="md:hidden card-gradient-animate p-6 rounded-b-3xl shadow-lg mb-6 animate-in slide-in-from-top-10 duration-500">
          <div className="flex items-center gap-3 mb-6">
             <UserAvatar user={user} size="w-12 h-12" textSize="text-lg" />
             <div>
@@ -334,7 +335,7 @@ const DashboardScreen = ({ user, transactions }) => {
          </div>
       </div>
 
-      <div className="hidden md:flex justify-between items-end mb-8">
+      <div className="hidden md:flex justify-between items-end mb-8 animate-in fade-in slide-in-from-top-4 duration-500">
         <div>
           <h1 className="text-3xl font-bold text-white mb-1">Visão Geral</h1>
           <p className="text-gray-400 text-sm">Bem-vindo de volta, {user.name}!</p>
@@ -346,7 +347,9 @@ const DashboardScreen = ({ user, transactions }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 md:px-0">
-        <div className="hidden md:flex flex-col justify-between bg-gradient-to-br from-[#00331b] to-[#0a0a0a] p-6 rounded-2xl border border-gray-800 shadow-lg col-span-3 lg:col-span-1 h-64 relative overflow-hidden">
+        
+        {/* CARD SALDO DESKTOP (com classe card-gradient-animate aplicada) */}
+        <div className="hidden md:flex flex-col justify-between card-gradient-animate p-6 rounded-2xl border border-gray-800 shadow-lg col-span-3 lg:col-span-1 h-64 relative overflow-hidden animate-in zoom-in-95 duration-500 delay-100">
            <div className="relative z-10">
               <p className="text-gray-400 text-sm mb-1">Saldo Disponível</p>
               <h2 className="text-4xl font-bold text-white">
@@ -364,7 +367,7 @@ const DashboardScreen = ({ user, transactions }) => {
            <div className="absolute -right-5 -bottom-10 w-32 h-32 bg-cashGreen opacity-10 rounded-full blur-2xl"></div>
         </div>
 
-        <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800 md:col-span-2 h-auto md:h-64 flex flex-col">
+        <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800 md:col-span-2 h-auto md:h-64 flex flex-col animate-in zoom-in-95 duration-500 delay-200">
           <div className="flex justify-between items-center mb-2">
             <span className="text-white font-bold">Resumo de Gastos</span>
             <div className="flex bg-[#0a0a0a] rounded-lg p-1">
@@ -372,8 +375,8 @@ const DashboardScreen = ({ user, transactions }) => {
                 <button
                   key={period}
                   onClick={() => setChartPeriod(period)}
-                  className={`px-3 py-1 text-[10px] uppercase font-bold rounded-md transition-all ${
-                    chartPeriod === period ? 'bg-cashGreen text-black' : 'text-gray-500 hover:text-white'
+                  className={`px-3 py-1 text-[10px] uppercase font-bold rounded-md transition-all duration-300 ${
+                    chartPeriod === period ? 'bg-cashGreen text-black shadow-md' : 'text-gray-500 hover:text-white'
                   }`}
                 >
                   {period}
@@ -386,7 +389,7 @@ const DashboardScreen = ({ user, transactions }) => {
           </div>
         </div>
 
-        <div className="col-span-1 md:col-span-3">
+        <div className="col-span-1 md:col-span-3 animate-in slide-in-from-bottom-8 duration-500 delay-300">
            <h3 className="text-gray-400 text-sm mb-4 px-1">Últimas movimentações</h3>
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {transactions.length === 0 ? (
@@ -395,7 +398,7 @@ const DashboardScreen = ({ user, transactions }) => {
                  </div>
               ) : (
                 transactions.slice(0, 6).map((t) => (
-                  <div key={t.id} className="bg-[#1E1E1E] p-4 rounded-2xl flex items-center justify-between border border-gray-800 hover:border-gray-600 transition-colors">
+                  <div key={t.id} className="bg-[#1E1E1E] p-4 rounded-2xl flex items-center justify-between border border-gray-800 hover:border-gray-600 transition-all hover:scale-[1.02] cursor-default">
                     <div className="flex items-center gap-3">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white
                         ${t.type === 'expense' ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}`}>
@@ -436,15 +439,15 @@ const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction
     <div className="h-full flex flex-col">
        <div className="flex items-center justify-between mb-6 px-6 md:px-0 pt-6 md:pt-0">
           <h2 className="text-2xl md:text-3xl font-bold text-white">Todas as Transações</h2>
-          <button onClick={() => setShowForm(!showForm)} className="bg-cashGreen hover:bg-green-400 text-black px-4 py-2 rounded-full flex items-center gap-2 font-bold text-sm transition-all">
+          <button onClick={() => setShowForm(!showForm)} className="bg-cashGreen hover:bg-green-400 text-black px-4 py-2 rounded-full flex items-center gap-2 font-bold text-sm transition-all hover:scale-105 active:scale-95">
             {showForm ? <X size={18}/> : <Plus size={18}/>}
             <span className="hidden md:inline">{showForm ? 'Cancelar' : 'Nova Transação'}</span>
           </button>
        </div>
 
        {showForm && (
-         <div className="px-6 md:px-0 mb-6">
-           <form onSubmit={handleSubmit} className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-700 max-w-2xl animate-in slide-in-from-top-5 fade-in">
+         <div className="px-6 md:px-0 mb-6 animate-in slide-in-from-top-10 fade-in duration-300">
+           <form onSubmit={handleSubmit} className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-700 max-w-2xl">
               <h3 className="text-white font-bold mb-4">Adicionar Movimentação</h3>
               <div className="flex gap-2 mb-4">
                 <button type="button" onClick={() => setNewTrans({...newTrans, type: 'expense'})} 
@@ -460,7 +463,7 @@ const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction
                 <InputGroup darkTheme placeholder="Descrição (ex: Mercado)" value={newTrans.name} onChange={e => setNewTrans({...newTrans, name: e.target.value})} />
                 <InputGroup darkTheme placeholder="Valor (ex: 150.00)" type="number" value={newTrans.value} onChange={e => setNewTrans({...newTrans, value: e.target.value})} />
                 {newTrans.type === 'expense' && (
-                  <div className="md:col-span-2 flex flex-col gap-2">
+                  <div className="md:col-span-2 flex flex-col gap-2 animate-in fade-in duration-300">
                      <label className="text-gray-300 font-bold text-xs ml-1">Categoria</label>
                      <div className="flex flex-wrap gap-2">
                         {Object.keys(CATEGORIES).map(cat => (
@@ -488,15 +491,15 @@ const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction
        <div className="flex-1 overflow-y-auto px-6 md:px-0 pb-24 md:pb-0">
           <div className="grid grid-cols-1 gap-3">
              {transactions.length === 0 && (
-                <div className="flex flex-col items-center justify-center mt-20 text-gray-600">
+                <div className="flex flex-col items-center justify-center mt-20 text-gray-600 animate-in fade-in duration-700">
                    <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-4 opacity-50">
                       <ArrowLeftRight size={30} />
                    </div>
                    <p>Nenhuma transação encontrada.</p>
                 </div>
              )}
-             {transactions.map((t) => (
-                <div key={t.id} className="flex justify-between items-center p-4 bg-[#1E1E1E] hover:bg-[#252525] rounded-xl border border-gray-800 transition-colors">
+             {transactions.map((t, idx) => (
+                <div key={t.id} className="flex justify-between items-center p-4 bg-[#1E1E1E] hover:bg-[#252525] rounded-xl border border-gray-800 transition-all hover:scale-[1.01] animate-in slide-in-from-bottom-4 fade-in duration-300" style={{ animationDelay: `${idx * 50}ms` }}>
                    <div className="flex items-center gap-4">
                       <div className={`w-2 h-10 rounded-full ${t.type === 'income' ? 'bg-cashGreen' : 'bg-red-500'}`}></div>
                       <div>
@@ -569,10 +572,9 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal, onEdi
             />
          </div>
 
-         {/* Modal de Depósito */}
          {depositModal.isOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-               <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700 animate-in fade-in zoom-in-95">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+               <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700 animate-in zoom-in-95 slide-in-from-bottom-10 duration-300">
                   <h3 className="text-white font-bold text-lg mb-4">Guardar dinheiro</h3>
                   <p className="text-gray-400 text-sm mb-4">Quanto deseja adicionar a esta meta?</p>
                   <InputGroup placeholder="Valor (ex: 50.00)" type="number" darkTheme value={depositValue} onChange={(e) => setDepositValue(e.target.value)} />
@@ -584,18 +586,15 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal, onEdi
             </div>
          )}
 
-         {/* Modal de Edição de Meta */}
          {editModal.isOpen && editModal.goal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-               <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700 animate-in fade-in zoom-in-95">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+               <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700 animate-in zoom-in-95 slide-in-from-bottom-10 duration-300">
                   <div className="flex justify-between items-center mb-4">
                      <h3 className="text-white font-bold text-lg">Editar Meta</h3>
                      <button onClick={() => setEditModal({ isOpen: false, goal: null })} className="text-gray-400 hover:text-white"><X size={20} /></button>
                   </div>
-                  
                   <InputGroup label="Nome da Meta" darkTheme value={editModal.goal.description} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, description: e.target.value }})} />
                   <InputGroup label="Valor Total (R$)" type="number" darkTheme value={editModal.goal.total} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, total: e.target.value }})} />
-
                   <div className="flex flex-col gap-3 mt-6">
                      <PrimaryButton label="Salvar Alterações" onClick={handleSaveEdit} />
                      <button onClick={handleDeleteFromModal} className="w-full py-3 rounded-full bg-red-500/10 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2 border border-red-500/30">
@@ -607,7 +606,7 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal, onEdi
          )}
 
          {isCreating && (
-            <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800 mb-8 max-w-2xl animate-in slide-in-from-top-5 fade-in">
+            <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800 mb-8 max-w-2xl animate-in slide-in-from-top-8 fade-in duration-300">
                <h3 className="text-white font-bold mb-4">Definir nova meta</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
@@ -626,16 +625,16 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal, onEdi
 
          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {goals.length === 0 && !isCreating && (
-               <div className="col-span-full text-center py-20 text-gray-600 border-2 border-dashed border-gray-800 rounded-2xl">
+               <div className="col-span-full text-center py-20 text-gray-600 border-2 border-dashed border-gray-800 rounded-2xl animate-in fade-in duration-700">
                   <p>Você ainda não criou nenhuma meta.</p>
                </div>
             )}
-            {goals.map((goal) => {
+            {goals.map((goal, idx) => {
                const current = parseFloat(goal.current || 0);
                const total = parseFloat(goal.total || 1);
                const percent = Math.min((current / total) * 100, 100);
                return (
-                  <div key={goal.id} className="bg-[#1E1E1E] p-5 rounded-2xl border border-gray-800 relative group hover:border-cashGreen/50 transition-colors">
+                  <div key={goal.id} className="bg-[#1E1E1E] p-5 rounded-2xl border border-gray-800 relative group hover:border-cashGreen/50 transition-all hover:scale-[1.02] animate-in slide-in-from-bottom-4 fade-in duration-500" style={{ animationDelay: `${idx * 100}ms` }}>
                      <div className="flex justify-between mb-2 items-start">
                         <span className="text-white font-bold text-lg">{goal.description}</span>
                         <div className="flex gap-2">
@@ -690,7 +689,7 @@ const ProfileScreen = ({ user, onUpdateUser, showAlert }) => {
   return (
     <div className="px-6 md:px-0 pt-10 md:pt-0 pb-24 md:pb-0 max-w-2xl mx-auto md:mx-0">
       <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">Configurações de Perfil</h2>
-      <div className="bg-[#1E1E1E] p-8 rounded-2xl border border-gray-800">
+      <div className="bg-[#1E1E1E] p-8 rounded-2xl border border-gray-800 animate-in fade-in zoom-in-95 duration-500">
          <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
             <div className="relative group">
                <UserAvatar user={formData} size="w-32 h-32" textSize="text-4xl" />
@@ -740,7 +739,6 @@ function App() {
     onConfirm: null 
   });
 
-  // Função helper para chamar o popup
   const showAlert = (title, message, type = 'success', onConfirm = null) => {
     setPopupConfig({ isOpen: true, title, message, type, onConfirm });
   };
@@ -832,7 +830,7 @@ function App() {
 
   const renderContent = () => {
     return (
-      <div key={activeTab} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div key={activeTab} className="animate-in fade-in slide-in-from-bottom-8 duration-500 ease-out">
         {(() => {
           switch(activeTab) {
              case 'dashboard': return <DashboardScreen user={user} transactions={transactions} />;
@@ -851,37 +849,31 @@ function App() {
   if (currentScreen === 'login') {
     return (
       <div className="min-h-screen w-full bg-gradient-app flex items-center justify-center p-6">
-        
-        {/* POPUP GLOBAL PARA LOGIN */}
-        <SystemPopup 
-          isOpen={popupConfig.isOpen} 
-          onClose={closeAlert} 
-          type={popupConfig.type} 
-          title={popupConfig.title} 
-          message={popupConfig.message} 
-        />
+        <SystemPopup isOpen={popupConfig.isOpen} onClose={closeAlert} type={popupConfig.type} title={popupConfig.title} message={popupConfig.message} />
 
         <div className="w-full max-w-md transition-all duration-500">
            <Logo />
-           <form onSubmit={(e) => { e.preventDefault(); handleAuth(); }} className="flex flex-col px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             <h2 className="text-white text-2xl font-bold mb-6 text-center">
-               {isRegister ? 'Crie sua conta' : 'Acesse sua conta'}
-             </h2>
-             {isRegister && (
-                <InputGroup label="Nome Completo" placeholder="Seu nome" value={authData.name} onChange={(e) => setAuthData({...authData, name: e.target.value})} />
-             )}
-             <InputGroup label="Email" placeholder="seu@email.com" type="email" value={authData.email} onChange={(e) => setAuthData({...authData, email: e.target.value})} />
-             <InputGroup label="Senha" placeholder="********" isPassword value={authData.password} onChange={(e) => setAuthData({...authData, password: e.target.value})} />
-             {isRegister && (
-                <InputGroup label="Confirmar Senha" placeholder="********" isPassword value={authData.confirmPassword} onChange={(e) => setAuthData({...authData, confirmPassword: e.target.value})} />
-             )}
-             <div className="flex flex-col gap-4 mt-6">
-               <PrimaryButton label={isRegister ? "Cadastrar" : "Entrar"} icon={isRegister ? <UserPlus size={20} /> : <ArrowRight size={20} />} type="submit" />
-               <button type="button" onClick={() => setIsRegister(!isRegister)} className="text-cashGreen font-bold text-sm hover:text-green-400 transition-colors mt-2">
-                 {isRegister ? "Já tem uma conta? Faça login" : "Não tem conta? Cadastre-se"}
-               </button>
-             </div>
-           </form>
+           <div key={isRegister ? 'register' : 'login'} className="animate-in fade-in slide-in-from-right-8 duration-500">
+             <form onSubmit={(e) => { e.preventDefault(); handleAuth(); }} className="flex flex-col px-4">
+               <h2 className="text-white text-2xl font-bold mb-6 text-center">
+                 {isRegister ? 'Crie sua conta' : 'Acesse sua conta'}
+               </h2>
+               {isRegister && (
+                  <InputGroup label="Nome Completo" placeholder="Seu nome" value={authData.name} onChange={(e) => setAuthData({...authData, name: e.target.value})} />
+               )}
+               <InputGroup label="Email" placeholder="seu@email.com" type="email" value={authData.email} onChange={(e) => setAuthData({...authData, email: e.target.value})} />
+               <InputGroup label="Senha" placeholder="********" isPassword value={authData.password} onChange={(e) => setAuthData({...authData, password: e.target.value})} />
+               {isRegister && (
+                  <InputGroup label="Confirmar Senha" placeholder="********" isPassword value={authData.confirmPassword} onChange={(e) => setAuthData({...authData, confirmPassword: e.target.value})} />
+               )}
+               <div className="flex flex-col gap-4 mt-6">
+                 <PrimaryButton label={isRegister ? "Cadastrar" : "Entrar"} icon={isRegister ? <UserPlus size={20} /> : <ArrowRight size={20} />} type="submit" />
+                 <button type="button" onClick={() => setIsRegister(!isRegister)} className="text-cashGreen font-bold text-sm hover:text-green-400 transition-colors mt-2">
+                   {isRegister ? "Já tem uma conta? Faça login" : "Não tem conta? Cadastre-se"}
+                 </button>
+               </div>
+             </form>
+           </div>
         </div>
       </div>
     );
@@ -889,16 +881,7 @@ function App() {
 
   return (
     <div className="min-h-screen w-full bg-[#0a0a0a] text-white font-sans flex">
-      {/* POPUP GLOBAL PARA APLICAÇÃO */}
-      <SystemPopup 
-        isOpen={popupConfig.isOpen} 
-        onClose={closeAlert} 
-        type={popupConfig.type} 
-        title={popupConfig.title} 
-        message={popupConfig.message} 
-        onConfirm={popupConfig.onConfirm}
-      />
-
+      <SystemPopup isOpen={popupConfig.isOpen} onClose={closeAlert} type={popupConfig.type} title={popupConfig.title} message={popupConfig.message} onConfirm={popupConfig.onConfirm} />
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={handleLogout} user={user} transactions={transactions} />
       <main className="flex-1 md:ml-64 h-screen overflow-y-auto bg-gradient-app">
          <div className="max-w-7xl mx-auto md:p-10">
