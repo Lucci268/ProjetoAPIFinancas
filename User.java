@@ -21,6 +21,9 @@ public class User {
     )
     private String telefone;
 
+    private String name;
+    private String role;
+
     public User() {}
 
     public Long getId() { return id; }
@@ -34,5 +37,10 @@ public class User {
 
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
-}
 
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+}

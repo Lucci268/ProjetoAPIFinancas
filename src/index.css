@@ -22,7 +22,6 @@ html, body, #root {
   .text-cashGreen { color: #00C853; }
   .bg-cashGreen { background-color: #00C853; }
 
-  /* --- FUNDO DA TELA (Fixo e Suave) --- */
   .bg-gradient-app {
     background-color: #0a0a0a;
     background-image: 
@@ -33,7 +32,6 @@ html, body, #root {
     animation: moveBackgroundSlow 20s ease-in-out infinite alternate;
   }
 
-  /* --- FUNDO DO CARD (estilo degradê do app - SEU CÓDIGO MANTIDO) --- */
   .card-gradient-animate {
     position: relative;
     background-color: #020b06;
@@ -58,11 +56,11 @@ html, body, #root {
   .btn-liquid {
     background-image: linear-gradient(
       45deg, 
-      #00C853,  /* Verde Padrão */
-      #00E676,  /* Verde Neon Claro */
-      #00b34a,  /* Verde Médio */
-      #69F0AE,  /* Verde Água */
-      #00C853   /* Volta ao padrão */
+      #00C853, 
+      #00E676,  
+      #00b34a,  
+      #69F0AE,  
+      #00C853  
     );
     background-size: 300% 300%;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -110,25 +108,37 @@ html, body, #root {
 
 /* --- KEYFRAMES --- */
 
-/* Movimento do fundo do app */
 @keyframes moveBackgroundSlow {
   0% { background-position: 0% 50%; }
   100% { background-position: 100% 50%; }
 }
 
-/* Movimento do fundo do card (estilo degradê do app) */
 @keyframes appGradientFlow {
   0% { background-position: 40% 50%; }
   50% { background-position: 60% 50%; }
   100% { background-position: 40% 50%; }
 }
 
-/* Novo: Animação do Botão Liquid */
 @keyframes liquidFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
 
 @keyframes rotateSliver { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

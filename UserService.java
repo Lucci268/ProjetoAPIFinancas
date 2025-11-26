@@ -15,9 +15,22 @@ public class UserService {
     private final AtomicLong nextId = new AtomicLong(1);
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    public UserService() {
+
+        User admin = new User();
+        admin.setId(nextId.getAndIncrement());
+        admin.setName("Administrador");
+        admin.setEmail("admin@cashplus.com");
+        admin.setSenha(passwordEncoder.encode("admin123"));
+        admin.setTelefone("00000000000");
+        admin.setRole("ADMIN");
+        users.add(admin);
+    }
+
     public User registrar(User user) {
         user.setId(nextId.getAndIncrement());
         user.setSenha(passwordEncoder.encode(user.getSenha()));
+        user.setRole("USER");
         users.add(user);
         return user;
     }
@@ -37,7 +50,6 @@ public class UserService {
     }
 
     public List<User> buscarTodos() {
-    return users;
+        return users;
+    }
 }
-}
-
