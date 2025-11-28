@@ -84,7 +84,7 @@ const UserAvatar = ({ user, size = "w-10 h-10", textSize = "text-xs", showBorder
   );
 };
 
-const InputGroup = ({ label, type = 'text', placeholder, isPassword = false, darkTheme = false, value, onChange, name, required = false }) => {
+const InputGroup = ({ label, type = 'text', placeholder, isPassword = false, darkTheme = false, value, onChange, name, required = false, maxLength }) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="flex flex-col gap-2 mb-4 w-full">
@@ -97,6 +97,7 @@ const InputGroup = ({ label, type = 'text', placeholder, isPassword = false, dar
           onChange={onChange}
           name={name}
           required={required}
+          maxLength={maxLength}
           className={`w-full h-12 pl-6 pr-12 rounded-2xl outline-none border-none shadow-lg text-sm font-medium transition-all focus:ring-2 focus:ring-cashGreen 
             ${darkTheme ? 'bg-[#2C2C2C] text-white placeholder-gray-500' : 'bg-white text-black placeholder-gray-400'}`}
         />
@@ -123,10 +124,9 @@ const PrimaryButton = ({ label, icon, onClick, variant = 'primary', fullWidth = 
 );
 
 const ExpensePieChart = ({ transactions, period }) => {
-  // Filtra e calcula gastos
   const filteredTransactions = transactions.filter(t => {
     if (t.tipo !== 'expense' && t.tipo !== 'despesa') return false; 
-    const tDate = parseDate(t.data); // Backend usa 'data'
+    const tDate = parseDate(t.data);
     const now = new Date();
     if (period === 'semana') {
       const oneWeekAgo = new Date();
@@ -405,6 +405,7 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal, onEdi
 const ProfileScreen = ({ user, onUpdateUser, showAlert }) => {
   const [formData, setFormData] = useState(user);
   const fileInputRef = useRef(null);
+  
   const handleFileChange = (event) => { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onloadend = () => setFormData({ ...formData, avatar: reader.result }); reader.readAsDataURL(file); } };
   const handleRemovePhoto = () => setFormData({ ...formData, avatar: null });
   const handleSave = (e) => { e.preventDefault(); onUpdateUser(formData); showAlert('Sucesso!', 'Seu perfil foi atualizado.', 'success'); };
@@ -418,7 +419,11 @@ const ProfileScreen = ({ user, onUpdateUser, showAlert }) => {
             <div className="text-center md:text-left flex-1"><h3 className="text-white font-bold text-xl">{formData.name || "Usuário"}</h3><p className="text-gray-500 mb-4">{formData.email}</p>{formData.avatar && <button onClick={handleRemovePhoto} className="text-red-400 text-xs font-bold hover:underline flex items-center gap-1 mx-auto md:mx-0"><Trash2 size={12} /> Remover foto</button>}</div>
          </div>
          <form className="flex flex-col gap-4" onSubmit={handleSave}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4"><InputGroup label="Nome Completo" placeholder="Seu nome" darkTheme value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} /><InputGroup label="Email" placeholder="email@exemplo.com" type="email" darkTheme value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} /></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <InputGroup label="Nome Completo" placeholder="Seu nome" darkTheme value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                <InputGroup label="Email" placeholder="email@exemplo.com" type="email" darkTheme value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                <InputGroup label="Telefone" placeholder="11999999999" type="tel" maxLength={11} darkTheme value={formData.telefone} onChange={e => setFormData({...formData, telefone: e.target.value})} />
+            </div>
             <div className="mt-4 md:w-1/3"><PrimaryButton label="Salvar Alterações" icon={<Check size={18} />} type="submit" /></div>
          </form>
       </div>
@@ -489,7 +494,7 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('login'); 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isRegister, setIsRegister] = useState(false);
-  const [authData, setAuthData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [authData, setAuthData] = useState({ name: '', email: '', password: '', confirmPassword: '', phone: '' });
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, type: 'success', title: '', message: '', onConfirm: null });
 
   const showAlert = (title, message, type = 'success', onConfirm = null) => { setPopupConfig({ isOpen: true, title, message, type, onConfirm }); };
@@ -501,15 +506,11 @@ function App() {
 
   useEffect(() => { localStorage.setItem('cashplus_user', JSON.stringify(user)); }, [user]);
 
-  // Busca dados do servidor quando o usuário loga
   const fetchUserData = async () => {
       if (!user.id) return;
       try {
-          // Busca Transações
           const resTrans = await axios.get(`http://localhost:8080/api/transactions?userId=${user.id}`);
           setTransactions(resTrans.data);
-
-          // Busca Metas
           const resGoals = await axios.get(`http://localhost:8080/api/goals?userId=${user.id}`);
           setGoals(resGoals.data);
       } catch (err) {
@@ -530,8 +531,8 @@ function App() {
               descricao: t.descricao,
               valor: t.valor,
               tipo: t.tipo,
-              categoriaId: 1,
-              nomeCategoria: t.nomeCategoria
+              categoriaId: 1, 
+              nomeCategoria: t.nomeCategoria 
           });
           setTransactions([...transactions, res.data]);
           showAlert('Sucesso', 'Transação registrada no banco!', 'success');
@@ -556,7 +557,7 @@ function App() {
               descricao: g.description,
               valorMeta: g.total,
               valorAtual: g.current,
-              dataAlvo: new Date().toISOString().split('T')[0] // Data hoje
+              dataAlvo: new Date().toISOString().split('T')[0]
           });
           setGoals([...goals, res.data]);
       } catch (error) {
@@ -623,12 +624,16 @@ function App() {
              showAlert('Atenção', 'Por favor, digite seu nome.', 'error'); 
              return; 
          }
+         if (!authData.phone || authData.phone.length !== 11) {
+             showAlert('Atenção', 'Por favor, digite um telefone válido (11 dígitos).', 'error'); 
+             return; 
+         }
 
          const res = await axios.post('http://localhost:8080/api/users/register', {
             name: authData.name,
             email: authData.email,
             senha: authData.password,
-            telefone: "11999999999", 
+            telefone: authData.phone, 
             role: "USER"
          });
 
@@ -664,7 +669,15 @@ function App() {
      }
   };
 
-  const handleLogout = () => { setCurrentScreen('login'); setIsRegister(false); setAuthData({ name: '', email: '', password: '', confirmPassword: '' }); setUser({name:'', email:'', avatar: null}); localStorage.removeItem('cashplus_user'); setTransactions([]); setGoals([]); };
+  const handleLogout = () => { 
+      setCurrentScreen('login'); 
+      setIsRegister(false); 
+      setAuthData({ name: '', email: '', password: '', confirmPassword: '', phone: '' }); 
+      setUser({name:'', email:'', avatar: null}); 
+      localStorage.removeItem('cashplus_user'); 
+      setTransactions([]); 
+      setGoals([]); 
+  };
 
   const renderContent = () => {
     return (
@@ -699,7 +712,12 @@ function App() {
                {isRegister && <InputGroup label="Nome Completo" placeholder="Seu nome" value={authData.name} onChange={(e) => setAuthData({...authData, name: e.target.value})} />}
                <InputGroup label="Email" placeholder="seu@email.com" type="email" value={authData.email} onChange={(e) => setAuthData({...authData, email: e.target.value})} />
                <InputGroup label="Senha" placeholder="********" isPassword value={authData.password} onChange={(e) => setAuthData({...authData, password: e.target.value})} />
-               {isRegister && <InputGroup label="Confirmar Senha" placeholder="********" isPassword value={authData.confirmPassword} onChange={(e) => setAuthData({...authData, confirmPassword: e.target.value})} />}
+               {isRegister && (
+                   <>
+                    <InputGroup label="Confirmar Senha" placeholder="********" isPassword value={authData.confirmPassword} onChange={(e) => setAuthData({...authData, confirmPassword: e.target.value})} />
+                    <InputGroup label="Telefone" placeholder="11999999999" type="tel" maxLength={11} value={authData.phone} onChange={(e) => setAuthData({...authData, phone: e.target.value})} />
+                   </>
+               )}
                <div className="flex flex-col gap-4 mt-6"><PrimaryButton label={isRegister ? "Cadastrar" : "Entrar"} icon={isRegister ? <UserPlus size={20} /> : <ArrowRight size={20} />} type="submit" /><button type="button" onClick={() => setIsRegister(!isRegister)} className="text-cashGreen font-bold text-sm hover:text-green-400 transition-colors mt-2">{isRegister ? "Já tem uma conta? Faça login" : "Não tem conta? Cadastre-se"}</button></div>
              </form>
            </div>
