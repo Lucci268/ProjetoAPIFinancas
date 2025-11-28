@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import { 
   Eye, EyeOff, ArrowRight, Home, ArrowLeftRight, 
   BarChart3, User, Plus, TrendingUp, TrendingDown,
@@ -24,8 +25,18 @@ const ALLOWED_EMAIL_DOMAINS = [
 
 const parseDate = (dateStr) => {
   if (!dateStr) return new Date();
+  if (dateStr.includes('-')) {
+      const [year, month, day] = dateStr.split('-');
+      return new Date(year, month - 1, day);
+  }
   const [day, month, year] = dateStr.split('/');
   return new Date(year, month - 1, day);
+};
+
+const formatDate = (dateString) => {
+    if(!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
 };
 
 /* ------------------- COMPONENTES UI ------------------- */
@@ -112,9 +123,10 @@ const PrimaryButton = ({ label, icon, onClick, variant = 'primary', fullWidth = 
 );
 
 const ExpensePieChart = ({ transactions, period }) => {
+  // Filtra e calcula gastos
   const filteredTransactions = transactions.filter(t => {
-    if (t.type !== 'expense') return false; 
-    const tDate = parseDate(t.date);
+    if (t.tipo !== 'expense' && t.tipo !== 'despesa') return false; 
+    const tDate = parseDate(t.data); // Backend usa 'data'
     const now = new Date();
     if (period === 'semana') {
       const oneWeekAgo = new Date();
@@ -128,8 +140,8 @@ const ExpensePieChart = ({ transactions, period }) => {
   const totalsByCategory = {};
   let totalExpense = 0;
   filteredTransactions.forEach(t => {
-    const cat = t.category || 'Outros';
-    const val = parseFloat(t.value);
+    const cat = t.nomeCategoria || 'Outros';
+    const val = parseFloat(t.valor);
     totalsByCategory[cat] = (totalsByCategory[cat] || 0) + val;
     totalExpense += val;
   });
@@ -196,8 +208,8 @@ const BottomNav = ({ activeTab, setActiveTab }) => {
 };
 
 const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] }) => {
-  const income = transactions.filter(t => t.type === 'income').reduce((acc, curr) => acc + parseFloat(curr.value), 0);
-  const expense = transactions.filter(t => t.type === 'expense').reduce((acc, curr) => acc + parseFloat(curr.value), 0);
+  const income = transactions.filter(t => t.tipo === 'income').reduce((acc, curr) => acc + parseFloat(curr.valor), 0);
+  const expense = transactions.filter(t => t.tipo === 'expense').reduce((acc, curr) => acc + parseFloat(curr.valor), 0);
   const balance = income - expense;
   const navItems = [
     { id: 'dashboard', icon: <Home size={20} />, label: 'Visão Geral' },
@@ -229,8 +241,8 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
 
 const DashboardScreen = ({ user, transactions }) => {
   const [chartPeriod, setChartPeriod] = useState('mes');
-  const income = transactions.filter(t => t.type === 'income').reduce((acc, curr) => acc + parseFloat(curr.value), 0);
-  const expense = transactions.filter(t => t.type === 'expense').reduce((acc, curr) => acc + parseFloat(curr.value), 0);
+  const income = transactions.filter(t => t.tipo === 'income').reduce((acc, curr) => acc + parseFloat(curr.valor), 0);
+  const expense = transactions.filter(t => t.tipo === 'expense').reduce((acc, curr) => acc + parseFloat(curr.valor), 0);
   const balance = income - expense;
 
   return (
@@ -261,8 +273,8 @@ const DashboardScreen = ({ user, transactions }) => {
               {transactions.length === 0 ? <div className="col-span-full p-8 text-center border border-dashed border-gray-700 rounded-2xl text-gray-500">Nenhuma movimentação registrada.</div> : 
                 transactions.slice(0, 6).map((t) => (
                   <div key={t.id} className="bg-[#1E1E1E] p-4 rounded-2xl flex items-center justify-between border border-gray-800 hover:border-gray-600 transition-all hover:scale-[1.02] cursor-default">
-                    <div className="flex items-center gap-3"><div className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${t.type === 'expense' ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}`}>{t.type === 'expense' ? <TrendingDown size={18}/> : <TrendingUp size={18}/>}</div><div><p className="text-white text-sm font-bold">{t.name}</p><p className="text-gray-500 text-[10px]">{t.category || 'Geral'} • {t.date}</p></div></div>
-                    <span className={`text-sm font-bold ${t.type === 'expense' ? 'text-white' : 'text-cashGreen'}`}>{t.type === 'expense' ? '- ' : '+ '}R$ {parseFloat(t.value).toFixed(2)}</span>
+                    <div className="flex items-center gap-3"><div className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${t.tipo === 'expense' ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}`}>{t.tipo === 'expense' ? <TrendingDown size={18}/> : <TrendingUp size={18}/>}</div><div><p className="text-white text-sm font-bold">{t.descricao}</p><p className="text-gray-500 text-[10px]">{t.nomeCategoria || 'Geral'} • {formatDate(t.data)}</p></div></div>
+                    <span className={`text-sm font-bold ${t.tipo === 'expense' ? 'text-white' : 'text-cashGreen'}`}>{t.tipo === 'expense' ? '- ' : '+ '}R$ {parseFloat(t.valor).toFixed(2)}</span>
                   </div>
                 ))}
            </div>
@@ -279,7 +291,12 @@ const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction
   const handleSubmit = (e) => {
     e.preventDefault();
     if(!newTrans.name || !newTrans.value) return;
-    onAddTransaction({ ...newTrans, date: new Date().toLocaleDateString('pt-BR') });
+    onAddTransaction({ 
+        descricao: newTrans.name, 
+        valor: newTrans.value, 
+        tipo: newTrans.type, 
+        nomeCategoria: newTrans.category 
+    });
     setNewTrans({ name: '', value: '', type: 'expense', category: 'Outros' });
     setShowForm(false);
   };
@@ -323,8 +340,8 @@ const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction
              {transactions.length === 0 && <div className="flex flex-col items-center justify-center mt-20 text-gray-600 animate-in fade-in duration-700"><div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-4 opacity-50"><ArrowLeftRight size={30} /></div><p>Nenhuma transação encontrada.</p></div>}
              {transactions.map((t, idx) => (
                 <div key={t.id} className="flex justify-between items-center p-4 bg-[#1E1E1E] hover:bg-[#252525] rounded-xl border border-gray-800 transition-all hover:scale-[1.01] animate-in slide-in-from-bottom-4 fade-in" style={{ animationDelay: `${idx * 50}ms` }}>
-                   <div className="flex items-center gap-4"><div className={`w-2 h-10 rounded-full ${t.type === 'income' ? 'bg-cashGreen' : 'bg-red-500'}`}></div><div><p className="text-white text-sm font-bold">{t.name}</p><p className="text-gray-500 text-xs">{t.date} {t.type === 'expense' && `• ${t.category || 'Outros'}`}</p></div></div>
-                   <div className="flex items-center gap-4"><span className={`font-bold text-sm ${t.type === 'income' ? 'text-cashGreen' : 'text-white'}`}>{t.type === 'expense' ? '-' : '+'} R$ {parseFloat(t.value).toFixed(2)}</span><button onClick={() => onDeleteTransaction(t.id)} className="p-2 text-gray-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"><Trash2 size={18}/></button></div>
+                   <div className="flex items-center gap-4"><div className={`w-2 h-10 rounded-full ${t.tipo === 'income' ? 'bg-cashGreen' : 'bg-red-500'}`}></div><div><p className="text-white text-sm font-bold">{t.descricao}</p><p className="text-gray-500 text-xs">{formatDate(t.data)} {t.tipo === 'expense' && `• ${t.nomeCategoria || 'Outros'}`}</p></div></div>
+                   <div className="flex items-center gap-4"><span className={`font-bold text-sm ${t.tipo === 'income' ? 'text-cashGreen' : 'text-white'}`}>{t.tipo === 'expense' ? '-' : '+'} R$ {parseFloat(t.valor).toFixed(2)}</span><button onClick={() => onDeleteTransaction(t.id)} className="p-2 text-gray-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"><Trash2 size={18}/></button></div>
                 </div>
              ))}
           </div>
@@ -342,8 +359,8 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal, onEdi
 
    const handleCreate = () => { if(!newGoal.description || !newGoal.total) return; onAddGoal(newGoal); setNewGoal({ description: '', total: '', current: '0' }); setIsCreating(false); };
    const confirmDeposit = () => { if(!depositValue || parseFloat(depositValue) <= 0) return; onDepositToGoal(depositModal.goalId, depositValue); setDepositModal({ isOpen: false, goalId: null }); setDepositValue(''); };
-   const handleSaveEdit = () => { if (!editModal.goal.description || !editModal.goal.total) return; onEditGoal(editModal.goal); setEditModal({ isOpen: false, goal: null }); };
-   const handleDeleteFromModal = () => { showAlert('Excluir Meta?', `Tem certeza que deseja excluir a meta "${editModal.goal.description}"?`, 'confirm', () => { onDeleteGoal(editModal.goal.id); setEditModal({ isOpen: false, goal: null }); }); };
+   const handleSaveEdit = () => { if (!editModal.goal.descricao || !editModal.goal.valorMeta) return; onEditGoal(editModal.goal); setEditModal({ isOpen: false, goal: null }); };
+   const handleDeleteFromModal = () => { showAlert('Excluir Meta?', `Tem certeza que deseja excluir a meta "${editModal.goal.descricao}"?`, 'confirm', () => { onDeleteGoal(editModal.goal.id); setEditModal({ isOpen: false, goal: null }); }); };
 
    return (
       <div className="px-6 md:px-0 pt-8 md:pt-0 pb-24 md:pb-0 h-full overflow-y-auto relative">
@@ -357,8 +374,8 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal, onEdi
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in">
                <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700 animate-in zoom-in-95 slide-in-from-bottom-10">
                   <div className="flex justify-between items-center mb-4"><h3 className="text-white font-bold text-lg">Editar Meta</h3><button onClick={() => setEditModal({ isOpen: false, goal: null })} className="text-gray-400 hover:text-white"><X size={20} /></button></div>
-                  <InputGroup label="Nome da Meta" darkTheme value={editModal.goal.description} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, description: e.target.value }})} />
-                  <InputGroup label="Valor Total (R$)" type="number" darkTheme value={editModal.goal.total} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, total: e.target.value }})} />
+                  <InputGroup label="Nome da Meta" darkTheme value={editModal.goal.descricao} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, descricao: e.target.value }})} />
+                  <InputGroup label="Valor Total (R$)" type="number" darkTheme value={editModal.goal.valorMeta} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, valorMeta: e.target.value }})} />
                   <div className="flex flex-col gap-3 mt-6"><PrimaryButton label="Salvar Alterações" onClick={handleSaveEdit} /><button onClick={handleDeleteFromModal} className="w-full py-3 rounded-full bg-red-500/10 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2 border border-red-500/30"><Trash2 size={18} /> Excluir Meta</button></div>
                </div>
             </div>
@@ -369,12 +386,12 @@ const PlanningScreen = ({ goals, onAddGoal, onDeleteGoal, onDepositToGoal, onEdi
          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {goals.length === 0 && !isCreating && <div className="col-span-full text-center py-20 text-gray-600 border-2 border-dashed border-gray-800 rounded-2xl animate-in fade-in">Você ainda não criou nenhuma meta.</div>}
             {goals.map((goal, idx) => {
-               const current = parseFloat(goal.current || 0);
-               const total = parseFloat(goal.total || 1);
+               const current = parseFloat(goal.valorAtual || 0);
+               const total = parseFloat(goal.valorMeta || 1);
                const percent = Math.min((current / total) * 100, 100);
                return (
                   <div key={goal.id} className="bg-[#1E1E1E] p-5 rounded-2xl border border-gray-800 relative group hover:border-cashGreen/50 transition-all hover:scale-[1.02] animate-in slide-in-from-bottom-4 fade-in" style={{ animationDelay: `${idx * 100}ms` }}>
-                     <div className="flex justify-between mb-2 items-start"><span className="text-white font-bold text-lg">{goal.description}</span><div className="flex gap-2"><button onClick={() => setDepositModal({ isOpen: true, goalId: goal.id })} className="text-cashGreen bg-cashGreen/10 p-2 rounded-lg hover:bg-cashGreen hover:text-black transition-colors" title="Guardar dinheiro"><PiggyBank size={18}/></button><button onClick={() => setEditModal({ isOpen: true, goal: goal })} className="text-gray-400 bg-gray-800 p-2 rounded-lg hover:bg-gray-700 hover:text-white transition-colors" title="Editar Meta"><Edit2 size={18} /></button></div></div>
+                     <div className="flex justify-between mb-2 items-start"><span className="text-white font-bold text-lg">{goal.descricao}</span><div className="flex gap-2"><button onClick={() => setDepositModal({ isOpen: true, goalId: goal.id })} className="text-cashGreen bg-cashGreen/10 p-2 rounded-lg hover:bg-cashGreen hover:text-black transition-colors" title="Guardar dinheiro"><PiggyBank size={18}/></button><button onClick={() => setEditModal({ isOpen: true, goal: goal })} className="text-gray-400 bg-gray-800 p-2 rounded-lg hover:bg-gray-700 hover:text-white transition-colors" title="Editar Meta"><Edit2 size={18} /></button></div></div>
                      <div className="flex justify-between mb-3 text-sm text-gray-400 font-medium"><span>{percent.toFixed(0)}%</span><span>R$ {current} / R$ {total}</span></div>
                      <div className="w-full h-3 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-cashGreen transition-all duration-1000 ease-out" style={{ width: `${percent}%` }}></div></div>
                   </div>
@@ -433,88 +450,30 @@ const AdminScreen = ({ onLogout }) => {
   }, []);
 
   const totalUsers = users.length;
-  
   const activeUsers = users.filter(u => u.role === 'USER').length; 
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-6 md:p-10 animate-in fade-in duration-500">
       <div className="max-w-7xl mx-auto">
-
         <div className="flex justify-between items-center mb-10">
            <div className="flex items-center gap-4">
               <div className="p-3 bg-blue-600/20 rounded-xl text-blue-500"><User size={32} /></div>
-              <div>
-                <h1 className="text-3xl font-bold">Painel Administrativo</h1>
-                <p className="text-gray-400">Gerenciamento do Sistema</p>
-              </div>
+              <div><h1 className="text-3xl font-bold">Painel Administrativo</h1><p className="text-gray-400">Gerenciamento do Sistema</p></div>
            </div>
-           <button onClick={onLogout} className="flex items-center gap-2 px-6 py-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all font-bold">
-             <LogOut size={20} /> Sair
-           </button>
+           <button onClick={onLogout} className="flex items-center gap-2 px-6 py-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all font-bold"><LogOut size={20} /> Sair</button>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800">
-              <p className="text-gray-400 mb-2">Total de Usuários</p>
-              <h2 className="text-4xl font-bold">
-                {loading ? <span className="text-gray-600 text-2xl">Carregando...</span> : totalUsers}
-              </h2>
-           </div>
-           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800">
-              <p className="text-gray-400 mb-2">Usuários Ativos (Users)</p>
-              <h2 className="text-4xl font-bold text-cashGreen">
-                {loading ? <span className="text-gray-600 text-2xl">...</span> : activeUsers}
-              </h2>
-           </div>
-           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800">
-              <p className="text-gray-400 mb-2">Status do Sistema</p>
-              <h2 className="text-4xl font-bold text-blue-400">Online</h2>
-           </div>
+           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800"><p className="text-gray-400 mb-2">Total de Usuários</p><h2 className="text-4xl font-bold">{loading ? <span className="text-gray-600 text-2xl">Carregando...</span> : totalUsers}</h2></div>
+           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800"><p className="text-gray-400 mb-2">Usuários Ativos (Users)</p><h2 className="text-4xl font-bold text-cashGreen">{loading ? <span className="text-gray-600 text-2xl">...</span> : activeUsers}</h2></div>
+           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800"><p className="text-gray-400 mb-2">Status do Sistema</p><h2 className="text-4xl font-bold text-blue-400">Online</h2></div>
         </div>
-
-        {/* Tabela de Usuários Dinâmica */}
         <div className="bg-[#1E1E1E] rounded-2xl border border-gray-800 overflow-hidden">
-           <div className="p-6 border-b border-gray-800 flex justify-between items-center">
-              <h3 className="text-xl font-bold">Usuários Cadastrados</h3>
-              <span className="text-xs text-gray-500">Atualizado em tempo real</span>
-           </div>
+           <div className="p-6 border-b border-gray-800 flex justify-between items-center"><h3 className="text-xl font-bold">Usuários Cadastrados</h3><span className="text-xs text-gray-500">Atualizado em tempo real</span></div>
            <div className="overflow-x-auto">
               <table className="w-full text-left">
-                 <thead className="bg-[#151515] text-gray-400 uppercase text-xs">
-                    <tr>
-                       <th className="px-6 py-4">ID</th>
-                       <th className="px-6 py-4">Nome</th>
-                       <th className="px-6 py-4">Email</th>
-                       <th className="px-6 py-4">Perfil</th>
-                    </tr>
-                 </thead>
+                 <thead className="bg-[#151515] text-gray-400 uppercase text-xs"><tr><th className="px-6 py-4">ID</th><th className="px-6 py-4">Nome</th><th className="px-6 py-4">Email</th><th className="px-6 py-4">Perfil</th></tr></thead>
                  <tbody className="divide-y divide-gray-800">
-                    {loading ? (
-                       <tr>
-                          <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
-                             Carregando dados...
-                          </td>
-                       </tr>
-                    ) : users.length === 0 ? (
-                       <tr>
-                          <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
-                             Nenhum usuário encontrado na base de dados.
-                          </td>
-                       </tr>
-                    ) : (
-                       users.map((u) => (
-                          <tr key={u.id} className="hover:bg-white/5 transition-colors">
-                             <td className="px-6 py-4 font-mono text-gray-500">#{u.id}</td>
-                             <td className="px-6 py-4 font-bold">{u.name || "Sem Nome"}</td>
-                             <td className="px-6 py-4 text-gray-300">{u.email}</td>
-                             <td className="px-6 py-4">
-                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${u.role === 'ADMIN' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>
-                                   {u.role || "USER"}
-                                </span>
-                             </td>
-                          </tr>
-                       ))
-                    )}
+                    {loading ? (<tr><td colSpan="4" className="px-6 py-8 text-center text-gray-500">Carregando dados...</td></tr>) : users.length === 0 ? (<tr><td colSpan="4" className="px-6 py-8 text-center text-gray-500">Nenhum usuário encontrado na base de dados.</td></tr>) : (users.map((u) => (<tr key={u.id} className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-mono text-gray-500">#{u.id}</td><td className="px-6 py-4 font-bold">{u.name || "Sem Nome"}</td><td className="px-6 py-4 text-gray-300">{u.email}</td><td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-bold ${u.role === 'ADMIN' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>{u.role || "USER"}</span></td></tr>)))}
                  </tbody>
               </table>
            </div>
@@ -537,28 +496,115 @@ function App() {
   const closeAlert = () => { setPopupConfig({ ...popupConfig, isOpen: false }); };
 
   const [user, setUser] = useState(() => { const saved = localStorage.getItem('cashplus_user'); return saved ? JSON.parse(saved) : { name: '', email: '', avatar: null }; });
-  const [transactions, setTransactions] = useState(() => { const saved = localStorage.getItem('cashplus_transactions'); return saved ? JSON.parse(saved) : []; });
-  const [goals, setGoals] = useState(() => { const saved = localStorage.getItem('cashplus_goals'); return saved ? JSON.parse(saved) : []; });
+  const [transactions, setTransactions] = useState([]);
+  const [goals, setGoals] = useState([]);
 
   useEffect(() => { localStorage.setItem('cashplus_user', JSON.stringify(user)); }, [user]);
-  useEffect(() => { localStorage.setItem('cashplus_transactions', JSON.stringify(transactions)); }, [transactions]);
-  useEffect(() => { localStorage.setItem('cashplus_goals', JSON.stringify(goals)); }, [goals]);
 
-  const handleAddTransaction = (t) => setTransactions([{ ...t, id: Date.now() }, ...transactions]);
-  const handleDeleteTransaction = (id) => setTransactions(transactions.filter(t => t.id !== id));
-  const handleAddGoal = (g) => setGoals([...goals, { ...g, id: Date.now() }]);
-  const handleDeleteGoal = (id) => setGoals(goals.filter(g => g.id !== id));
-  const handleEditGoal = (updatedGoal) => { const newGoals = goals.map(g => g.id === updatedGoal.id ? updatedGoal : g); setGoals(newGoals); };
-  const handleDepositToGoal = (goalId, amount) => {
-     const val = parseFloat(amount);
-     const updatedGoals = goals.map(g => { if(g.id === goalId) { return { ...g, current: (parseFloat(g.current) + val).toString() }; } return g; });
-     setGoals(updatedGoals);
-     const targetGoal = goals.find(g => g.id === goalId);
-     const newTransaction = { id: Date.now(), name: `Guardado: ${targetGoal.description}`, value: val, type: 'expense', category: 'Metas', date: new Date().toLocaleDateString('pt-BR') };
-     setTransactions([newTransaction, ...transactions]);
+  // Busca dados do servidor quando o usuário loga
+  const fetchUserData = async () => {
+      if (!user.id) return;
+      try {
+          // Busca Transações
+          const resTrans = await axios.get(`http://localhost:8080/api/transactions?userId=${user.id}`);
+          setTransactions(resTrans.data);
+
+          // Busca Metas
+          const resGoals = await axios.get(`http://localhost:8080/api/goals?userId=${user.id}`);
+          setGoals(resGoals.data);
+      } catch (err) {
+          console.error("Erro ao buscar dados do usuário:", err);
+      }
   };
 
-  const handleAuth = () => {
+  useEffect(() => {
+      if (user.id && currentScreen === 'app') {
+          fetchUserData();
+      }
+  }, [user.id, currentScreen]);
+
+  const handleAddTransaction = async (t) => {
+      try {
+          const res = await axios.post('http://localhost:8080/api/transactions', {
+              userId: user.id,
+              descricao: t.descricao,
+              valor: t.valor,
+              tipo: t.tipo,
+              categoriaId: 1,
+              nomeCategoria: t.nomeCategoria
+          });
+          setTransactions([...transactions, res.data]);
+          showAlert('Sucesso', 'Transação registrada no banco!', 'success');
+      } catch (error) {
+          showAlert('Erro', 'Não foi possível salvar a transação.', 'error');
+      }
+  };
+
+  const handleDeleteTransaction = async (id) => {
+      try {
+          await axios.delete(`http://localhost:8080/api/transactions/${id}`);
+          setTransactions(transactions.filter(t => t.id !== id));
+      } catch (error) {
+          showAlert('Erro', 'Falha ao deletar transação.', 'error');
+      }
+  };
+
+  const handleAddGoal = async (g) => {
+      try {
+          const res = await axios.post('http://localhost:8080/api/goals', {
+              userId: user.id,
+              descricao: g.description,
+              valorMeta: g.total,
+              valorAtual: g.current,
+              dataAlvo: new Date().toISOString().split('T')[0] // Data hoje
+          });
+          setGoals([...goals, res.data]);
+      } catch (error) {
+          showAlert('Erro', 'Falha ao criar meta.', 'error');
+      }
+  };
+
+  const handleDeleteGoal = async (id) => {
+      try {
+          await axios.delete(`http://localhost:8080/api/goals/${id}`);
+          setGoals(goals.filter(g => g.id !== id));
+      } catch (error) {
+          showAlert('Erro', 'Falha ao deletar meta.', 'error');
+      }
+  };
+
+  const handleEditGoal = async (updatedGoal) => {
+      try {
+          await axios.put(`http://localhost:8080/api/goals/${updatedGoal.id}`, updatedGoal);
+          setGoals(goals.map(g => g.id === updatedGoal.id ? updatedGoal : g));
+      } catch (error) {
+          showAlert('Erro', 'Falha ao atualizar meta.', 'error');
+      }
+  };
+
+  const handleDepositToGoal = async (goalId, amount) => {
+     const targetGoal = goals.find(g => g.id === goalId);
+     if(!targetGoal) return;
+
+     const newVal = parseFloat(targetGoal.valorAtual || 0) + parseFloat(amount);
+     
+     try {
+         const updated = { ...targetGoal, valorAtual: newVal };
+         await axios.put(`http://localhost:8080/api/goals/${goalId}`, updated);
+         setGoals(goals.map(g => g.id === goalId ? updated : g));
+
+         await handleAddTransaction({
+             descricao: `Guardado: ${targetGoal.descricao}`,
+             valor: amount,
+             tipo: 'expense',
+             nomeCategoria: 'Metas'
+         });
+     } catch (err) {
+         showAlert('Erro', 'Falha ao processar depósito.', 'error');
+     }
+  };
+
+  const handleAuth = async () => {
      if(authData.email) {
         const domain = authData.email.split('@')[1];
         if(!domain || !ALLOWED_EMAIL_DOMAINS.includes(domain) && authData.email !== 'admin@cashplus.com') {
@@ -566,22 +612,59 @@ function App() {
            return;
         }
      }
-     if (!isRegister && authData.email === 'admin@cashplus.com' && authData.password === 'admin123') {
-        setUser({ name: 'Administrador', email: 'admin@cashplus.com', role: 'ADMIN' });
-        setCurrentScreen('admin');
-        return;
+
+     try {
+       if (isRegister) {
+         if (authData.password !== authData.confirmPassword) { 
+             showAlert('Erro', 'As senhas não coincidem!', 'error'); 
+             return; 
+         }
+         if (!authData.name) { 
+             showAlert('Atenção', 'Por favor, digite seu nome.', 'error'); 
+             return; 
+         }
+
+         const res = await axios.post('http://localhost:8080/api/users/register', {
+            name: authData.name,
+            email: authData.email,
+            senha: authData.password,
+            telefone: "11999999999", 
+            role: "USER"
+         });
+
+         setUser(res.data);
+         setCurrentScreen('app');
+         showAlert('Bem-vindo!', 'Sua conta foi criada e salva.', 'success');
+
+       } else {
+         if (authData.email === 'admin@cashplus.com' && authData.password === 'admin123') {
+            setUser({ name: 'Administrador', email: 'admin@cashplus.com', role: 'ADMIN' });
+            setCurrentScreen('admin');
+            return;
+         }
+
+         const res = await axios.post('http://localhost:8080/api/users/login', {
+            email: authData.email,
+            senha: authData.password
+         });
+
+         const userData = res.data;
+         setUser(userData);
+         
+         if (userData.role === 'ADMIN') {
+             setCurrentScreen('admin');
+         } else {
+             setCurrentScreen('app');
+         }
+       }
+     } catch (error) {
+         console.error("Erro auth:", error);
+         const msg = error.response?.data || "Erro de conexão com o servidor.";
+         showAlert('Erro de Acesso', typeof msg === 'string' ? msg : JSON.stringify(msg), 'error');
      }
-     if (isRegister) {
-       if (authData.password !== authData.confirmPassword) { showAlert('Erro', 'As senhas não coincidem!', 'error'); return; }
-       if (!authData.name) { showAlert('Atenção', 'Por favor, digite seu nome.', 'error'); return; }
-       setUser({ ...user, name: authData.name, email: authData.email, role: 'USER' });
-     } else {
-       if(!user.name) setUser({ ...user, name: 'Usuário', email: authData.email || 'usuario@email.com', role: 'USER' });
-     }
-     setCurrentScreen('app');
   };
 
-  const handleLogout = () => { setCurrentScreen('login'); setIsRegister(false); setAuthData({ name: '', email: '', password: '', confirmPassword: '' }); };
+  const handleLogout = () => { setCurrentScreen('login'); setIsRegister(false); setAuthData({ name: '', email: '', password: '', confirmPassword: '' }); setUser({name:'', email:'', avatar: null}); localStorage.removeItem('cashplus_user'); setTransactions([]); setGoals([]); };
 
   const renderContent = () => {
     return (
