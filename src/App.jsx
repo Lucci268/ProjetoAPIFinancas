@@ -1,36 +1,48 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import logoImg from './assets/logo.png'; 
+
 import { 
   Eye, EyeOff, ArrowRight, Home, ArrowLeftRight, 
   BarChart3, User, Plus, TrendingUp, TrendingDown,
-  Check, Trash2, X, LogOut, Camera, PiggyBank, UserPlus, Edit2, AlertCircle, CheckCircle, HelpCircle
+  Check, Trash2, X, LogOut, Camera, PiggyBank, UserPlus, Edit2, AlertCircle, CheckCircle, HelpCircle, FileText
 } from 'lucide-react';
 
-/* ------------------- CONSTANTES ------------------- */
+/* ------------------- CONSTANTES & CORES ------------------- */
 
 const DEFAULT_CATEGORIES = [
-  { nome: 'Alimentação', cor: '#FFB74D' },
-  { nome: 'Transporte', cor: '#4FC3F7' },
-  { nome: 'Moradia', cor: '#EF5350' },
-  { nome: 'Lazer', cor: '#BA68C8' },
-  { nome: 'Saúde', cor: '#4DB6AC' },
-  { nome: 'Outros', cor: '#aff053ff' }
+  { nome: 'Alimentação', color: '#FFB74D' },
+  { nome: 'Transporte', color: '#4FC3F7' },
+  { nome: 'Moradia', color: '#EF5350' },
+  { nome: 'Lazer', color: '#BA68C8' },
+  { nome: 'Saúde', color: '#4DB6AC' },
+  { nome: 'Outros', color: '#90A4AE' }
 ];
+
+const CUSTOM_COLORS = [
+  '#FF8A65', '#AED581', '#4DD0E1', '#9575CD', '#F06292', 
+  '#E57373', '#FFF176', '#81C784', '#64B5F6', '#7986CB',
+  '#BA68C8', '#FFB74D', '#4DB6AC'
+];
+
+const getColorByName = (name) => {
+  if (!name) return '#90A4AE';
+  const defaultCat = DEFAULT_CATEGORIES.find(c => c.nome === name);
+  if (defaultCat) return defaultCat.color;
+
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % CUSTOM_COLORS.length;
+  return CUSTOM_COLORS[index];
+};
 
 const ALLOWED_EMAIL_DOMAINS = [
   'gmail.com', 'outlook.com', 'yahoo.com', 'hotmail.com', 
   'icloud.com', 'live.com', 'yahoo.com.br', 'uol.com.br',
   'bol.com.br', 'cashplus.com'
 ];
-
-const generateRandomColor = () => {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
 
 const parseDate = (dateStr) => {
   if (!dateStr) return new Date();
@@ -51,10 +63,12 @@ const formatDate = (dateString) => {
 /* ------------------- COMPONENTES UI ------------------- */
 
 const Logo = ({ small = false }) => (
-  <div className={`flex items-center gap-1 ${small ? 'justify-start' : 'justify-center mb-8'} animate-in fade-in duration-700`}>
-    <span className={`text-white font-bold tracking-wide drop-shadow-sm ${small ? 'text-2xl' : 'text-4xl'}`}>
-      Cash<span className="text-cashGreen">+</span>
-    </span>
+  <div className={`flex items-center ${small ? 'justify-start pl-2 py-2' : 'justify-center mb-4'} animate-in fade-in duration-700`}>
+    <img 
+      src={logoImg} 
+      alt="Logo Cash+" 
+      className={`${small ? 'h-20 w-auto' : 'w-72 h-auto'} object-contain drop-shadow-lg transition-all duration-300`}
+    />
   </div>
 );
 
@@ -96,7 +110,7 @@ const UserAvatar = ({ user, size = "w-10 h-10", textSize = "text-xs", showBorder
 const InputGroup = ({ label, type = 'text', placeholder, isPassword = false, darkTheme = false, value, onChange, name, required = false, maxLength }) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
-    <div className="flex flex-col gap-2 mb-4 w-full">
+    <div className="flex flex-col gap-2 mb-3 w-full">
       {label && <label className="text-gray-300 font-bold text-xs ml-1 tracking-wide">{label}</label>}
       <div className="relative">
         <input
@@ -167,7 +181,7 @@ const ExpensePieChart = ({ transactions, period, userCategories }) => {
       const deg = percent * 360;
       
       const foundCat = allCats.find(c => c.nome === catName);
-      const color = foundCat ? foundCat.cor : '#90A4AE';
+      const color = foundCat ? (foundCat.cor || foundCat.color) : getColorByName(catName);
       
       gradientString += `${color} ${currentDeg}deg ${currentDeg + deg}deg, `;
       currentDeg += deg;
@@ -364,9 +378,11 @@ const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction
                        <div className="flex flex-wrap gap-3 p-2 max-h-32 overflow-y-auto custom-scrollbar">
                           {allCategories.map(cat => {
                              const isCustom = !!cat.id;
+                             const catColor = cat.cor || cat.color || getColorByName(cat.nome);
+                             
                              return (
                                <div key={cat.nome || cat.id} className="relative group">
-                                  <button type="button" onClick={() => setNewTrans({...newTrans, category: cat.nome})} className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${newTrans.category === cat.nome ? 'border-transparent text-black' : 'border-gray-700 text-gray-400 hover:border-gray-500'}`} style={{ backgroundColor: newTrans.category === cat.nome ? cat.cor : 'transparent' }}>{cat.nome}</button>
+                                  <button type="button" onClick={() => setNewTrans({...newTrans, category: cat.nome})} className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${newTrans.category === cat.nome ? 'border-transparent text-black' : 'border-gray-700 text-gray-400 hover:border-gray-500'}`} style={{ backgroundColor: newTrans.category === cat.nome ? catColor : 'transparent' }}>{cat.nome}</button>
                                   {isCustom && (
                                       <button 
                                           type="button"
@@ -569,6 +585,10 @@ function App() {
   const [isRegister, setIsRegister] = useState(false);
   const [authData, setAuthData] = useState({ name: '', email: '', password: '', confirmPassword: '', phone: '' });
   const [popupConfig, setPopupConfig] = useState({ isOpen: false, type: 'success', title: '', message: '', onConfirm: null });
+  
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [termsText, setTermsText] = useState('');
 
   const showAlert = (title, message, type = 'success', onConfirm = null) => { setPopupConfig({ isOpen: true, title, message, type, onConfirm }); };
   const closeAlert = () => { setPopupConfig({ ...popupConfig, isOpen: false }); };
@@ -585,13 +605,10 @@ function App() {
       try {
           const resTrans = await axios.get(`http://localhost:8080/api/transactions?userId=${user.id}`);
           setTransactions(resTrans.data);
-          
           const resGoals = await axios.get(`http://localhost:8080/api/goals?userId=${user.id}`);
           setGoals(resGoals.data);
-
           const resCats = await axios.get(`http://localhost:8080/api/categorias?userId=${user.id}`);
           setUserCategories(resCats.data);
-
       } catch (err) {
           console.error("Erro ao buscar dados do usuário:", err);
       }
@@ -602,6 +619,17 @@ function App() {
           fetchUserData();
       }
   }, [user.id, currentScreen]);
+
+  const fetchTerms = async () => {
+      try {
+          const res = await axios.get('http://localhost:8080/api/terms-of-use');
+          setTermsText(res.data);
+          setShowTermsModal(true);
+      } catch (error) {
+          console.error("Erro ao buscar termos", error);
+          showAlert('Erro', 'Não foi possível carregar os termos de uso.', 'error');
+      }
+  };
 
   const handleAddTransaction = async (t) => {
       try {
@@ -686,12 +714,12 @@ function App() {
 
   const handleAddCategory = async (name) => {
       try {
-          const randomColor = generateRandomColor();
+          const randomColor = generateRandomColor(); 
           const res = await axios.post('http://localhost:8080/api/categorias', {
               nome: name,
               tipo: 'despesa', 
               userId: user.id,
-              cor: randomColor
+              cor: randomColor 
           });
           const newCat = res.data;
           setUserCategories([...userCategories, newCat]);
@@ -722,6 +750,10 @@ function App() {
 
      try {
        if (isRegister) {
+         if (!acceptedTerms) {
+             showAlert('Atenção', 'Você precisa ler e aceitar os Termos de Uso para criar uma conta.', 'error');
+             return;
+         }
          if (authData.password !== authData.confirmPassword) { 
              showAlert('Erro', 'As senhas não coincidem!', 'error'); 
              return; 
@@ -773,6 +805,7 @@ function App() {
       setCurrentScreen('login'); 
       setIsRegister(false); 
       setAuthData({ name: '', email: '', password: '', confirmPassword: '', phone: '' }); 
+      setAcceptedTerms(false);
       setUser({name:'', email:'', avatar: null}); 
       localStorage.removeItem('cashplus_user'); 
       setTransactions([]); 
@@ -785,7 +818,7 @@ function App() {
       <div key={activeTab} className="animate-in fade-in slide-in-from-bottom-8 duration-500 ease-out">
         {(() => {
           switch(activeTab) {
-             case 'dashboard': return <DashboardScreen user={user} transactions={transactions} userCategories={userCategories} />; // Passando categorias para o dashboard
+             case 'dashboard': return <DashboardScreen user={user} transactions={transactions} userCategories={userCategories} />; 
              case 'perfil': return <ProfileScreen user={user} onUpdateUser={setUser} showAlert={showAlert} />;
              case 'transacoes': return <TransactionScreen transactions={transactions} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} userCategories={userCategories} onAddCategory={handleAddCategory} onDeleteCategory={handleDeleteCategory} />;
              case 'createGoal': 
@@ -803,23 +836,54 @@ function App() {
 
   if (currentScreen === 'login') {
     return (
-      <div className="min-h-screen w-full bg-gradient-app flex items-center justify-center p-6">
+      <div className="min-h-screen w-full bg-gradient-app flex items-center justify-center p-6 overflow-hidden">
         <SystemPopup isOpen={popupConfig.isOpen} onClose={closeAlert} type={popupConfig.type} title={popupConfig.title} message={popupConfig.message} />
+        
+        {showTermsModal && (
+            <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in">
+                <div className="bg-[#1E1E1E] border border-gray-700 p-6 rounded-2xl w-full max-w-lg max-h-[80vh] flex flex-col relative animate-in zoom-in-95">
+                    <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-4">
+                        <h3 className="text-white font-bold text-xl flex items-center gap-2"><FileText size={24} className="text-cashGreen"/> Termos de Uso</h3>
+                        <button onClick={() => setShowTermsModal(false)} className="text-gray-400 hover:text-white"><X size={24} /></button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto custom-scrollbar text-gray-300 text-sm leading-relaxed whitespace-pre-line pr-2">
+                        {termsText || "Carregando termos..."}
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-gray-700">
+                        <button onClick={() => { setAcceptedTerms(true); setShowTermsModal(false); }} className="w-full py-3 bg-cashGreen text-black font-bold rounded-xl hover:bg-green-400 transition-all">Li e Concordo</button>
+                    </div>
+                </div>
+            </div>
+        )}
+
         <div className="w-full max-w-md transition-all duration-500">
            <Logo />
            <div key={isRegister ? 'register' : 'login'} className="animate-in fade-in slide-in-from-right-8 duration-500">
              <form onSubmit={(e) => { e.preventDefault(); handleAuth(); }} className="flex flex-col px-4">
-               <h2 className="text-white text-2xl font-bold mb-6 text-center">{isRegister ? 'Crie sua conta' : 'Acesse sua conta'}</h2>
+               <h2 className="text-white text-2xl font-bold mb-4 text-center">{isRegister ? 'Crie sua conta' : 'Acesse sua conta'}</h2>
                {isRegister && <InputGroup label="Nome Completo" placeholder="Seu nome" value={authData.name} onChange={(e) => setAuthData({...authData, name: e.target.value})} />}
-               <InputGroup label="Email" placeholder="seu@email.com" type="email" value={authData.email} onChange={(e) => setAuthData({...authData, email: e.target.value})} />
+               <InputGroup label="Email" placeholder="Insira seu email" type="email" value={authData.email} onChange={(e) => setAuthData({...authData, email: e.target.value})} />
                <InputGroup label="Senha" placeholder="********" isPassword value={authData.password} onChange={(e) => setAuthData({...authData, password: e.target.value})} />
                {isRegister && (
                    <>
                     <InputGroup label="Confirmar Senha" placeholder="********" isPassword value={authData.confirmPassword} onChange={(e) => setAuthData({...authData, confirmPassword: e.target.value})} />
-                    <InputGroup label="Telefone" placeholder="11999999999" type="tel" maxLength={11} value={authData.phone} onChange={(e) => setAuthData({...authData, phone: e.target.value})} />
+                    <InputGroup label="Telefone" placeholder="81999999999" type="tel" maxLength={11} value={authData.phone} onChange={(e) => setAuthData({...authData, phone: e.target.value})} />
+                    
+                    <div className="flex items-center gap-2 mt-1 mb-3">
+                        <input 
+                            type="checkbox" 
+                            id="terms" 
+                            checked={acceptedTerms} 
+                            onChange={(e) => setAcceptedTerms(e.target.checked)} 
+                            className="w-4 h-4 accent-cashGreen cursor-pointer"
+                        />
+                        <label htmlFor="terms" className="text-xs text-gray-400 cursor-pointer select-none">
+                            Li e aceito os <button type="button" onClick={fetchTerms} className="text-cashGreen font-bold hover:underline">Termos de Uso</button>
+                        </label>
+                    </div>
                    </>
                )}
-               <div className="flex flex-col gap-4 mt-6"><PrimaryButton label={isRegister ? "Cadastrar" : "Entrar"} icon={isRegister ? <UserPlus size={20} /> : <ArrowRight size={20} />} type="submit" /><button type="button" onClick={() => setIsRegister(!isRegister)} className="text-cashGreen font-bold text-sm hover:text-green-400 transition-colors mt-2">{isRegister ? "Já tem uma conta? Faça login" : "Não tem conta? Cadastre-se"}</button></div>
+               <div className="flex flex-col gap-4 mt-2"><PrimaryButton label={isRegister ? "Cadastrar" : "Entrar"} icon={isRegister ? <UserPlus size={20} /> : <ArrowRight size={20} />} type="submit" /><button type="button" onClick={() => setIsRegister(!isRegister)} className="text-cashGreen font-bold text-sm hover:text-green-400 transition-colors mt-2">{isRegister ? "Já tem uma conta? Faça login" : "Não tem conta? Cadastre-se"}</button></div>
              </form>
            </div>
         </div>

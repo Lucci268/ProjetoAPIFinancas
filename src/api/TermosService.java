@@ -12,11 +12,12 @@ public class TermosService {
             1. Aceitação dos Termos
             Ao acessar ou usar o serviço Cash+, você concorda em cumprir estes Termos de Uso.
             
-            2. Uso do Serviço
-            O Cash+ é destinado ao controle de finanças pessoais. Você é responsável pela precisão e legalidade dos dados que insere.
+            2. Utilização
+            O Cash+ é uma ferramenta para organização financeira pessoal. 
+            O usuário é responsável pelas informações que registrar na plataforma, garantindo que sejam corretas e utilizadas de forma adequada.
             
             3. Privacidade
-            Sua privacidade é importante. Os dados pessoais e financeiros serão tratados conforme nossa Política de Privacidade.
+            Sua privacidade é importante. Os dados pessoais e financeiros serão tratados conforme nossa Política de Privacidade para melhorias em nossa aplicação.
             """;
     }
 }
