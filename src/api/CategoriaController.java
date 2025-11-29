@@ -14,13 +14,19 @@ public class CategoriaController {
     private CategoriaService categoriaService;
 
     @GetMapping("/categorias")
-    public ResponseEntity<List<Categoria>> listarCategorias() {
-        return ResponseEntity.ok(categoriaService.buscarTodas());
+    public ResponseEntity<List<Categoria>> listarCategorias(@RequestParam Long userId) {
+        return ResponseEntity.ok(categoriaService.buscarPorUsuario(userId));
     }
 
     @PostMapping("/categorias")
     public ResponseEntity<Categoria> criarCategoria(@RequestBody Categoria categoria) {
         Categoria novaCat = categoriaService.criar(categoria);
         return ResponseEntity.status(201).body(novaCat);
+    }
+    
+    @DeleteMapping("/categorias/{id}")
+    public ResponseEntity<Void> deletarCategoria(@PathVariable Long id) {
+        categoriaService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

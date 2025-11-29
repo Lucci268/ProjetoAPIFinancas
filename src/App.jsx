@@ -6,22 +6,31 @@ import {
   Check, Trash2, X, LogOut, Camera, PiggyBank, UserPlus, Edit2, AlertCircle, CheckCircle, HelpCircle
 } from 'lucide-react';
 
-/* ------------------- UTILITÁRIOS & CONSTANTES ------------------- */
+/* ------------------- CONSTANTES ------------------- */
 
-const CATEGORIES = {
-  'Alimentação': { color: '#FFB74D', label: 'Alimentação' },
-  'Transporte': { color: '#4FC3F7', label: 'Transporte' },
-  'Moradia': { color: '#EF5350', label: 'Moradia' },
-  'Lazer': { color: '#BA68C8', label: 'Lazer' },
-  'Metas': { color: '#69F0AE', label: 'Metas/Economia' },
-  'Outros': { color: '#90A4AE', label: 'Outros' }
-};
+const DEFAULT_CATEGORIES = [
+  { nome: 'Alimentação', cor: '#FFB74D' },
+  { nome: 'Transporte', cor: '#4FC3F7' },
+  { nome: 'Moradia', cor: '#EF5350' },
+  { nome: 'Lazer', cor: '#BA68C8' },
+  { nome: 'Saúde', cor: '#4DB6AC' },
+  { nome: 'Outros', cor: '#aff053ff' }
+];
 
 const ALLOWED_EMAIL_DOMAINS = [
   'gmail.com', 'outlook.com', 'yahoo.com', 'hotmail.com', 
   'icloud.com', 'live.com', 'yahoo.com.br', 'uol.com.br',
   'bol.com.br', 'cashplus.com'
 ];
+
+const generateRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
 const parseDate = (dateStr) => {
   if (!dateStr) return new Date();
@@ -123,7 +132,7 @@ const PrimaryButton = ({ label, icon, onClick, variant = 'primary', fullWidth = 
   </button>
 );
 
-const ExpensePieChart = ({ transactions, period }) => {
+const ExpensePieChart = ({ transactions, period, userCategories }) => {
   const filteredTransactions = transactions.filter(t => {
     if (t.tipo !== 'expense' && t.tipo !== 'despesa') return false; 
     const tDate = parseDate(t.data);
@@ -150,14 +159,19 @@ const ExpensePieChart = ({ transactions, period }) => {
   let currentDeg = 0;
   const legendData = [];
 
+  const allCats = [...DEFAULT_CATEGORIES, ...userCategories];
+
   if (totalExpense > 0) {
-    Object.keys(totalsByCategory).forEach((cat) => {
-      const percent = totalsByCategory[cat] / totalExpense;
+    Object.keys(totalsByCategory).forEach((catName) => {
+      const percent = totalsByCategory[catName] / totalExpense;
       const deg = percent * 360;
-      const color = CATEGORIES[cat] ? CATEGORIES[cat].color : CATEGORIES['Outros'].color;
+      
+      const foundCat = allCats.find(c => c.nome === catName);
+      const color = foundCat ? foundCat.cor : '#90A4AE';
+      
       gradientString += `${color} ${currentDeg}deg ${currentDeg + deg}deg, `;
       currentDeg += deg;
-      legendData.push({ label: cat, value: totalsByCategory[cat], color: color, percent: (percent * 100).toFixed(0) });
+      legendData.push({ label: catName, value: totalsByCategory[catName], color: color, percent: (percent * 100).toFixed(0) });
     });
     gradientString = gradientString.slice(0, -2);
   }
@@ -191,16 +205,15 @@ const BottomNav = ({ activeTab, setActiveTab }) => {
   const navItems = [
     { id: 'dashboard', icon: <Home size={20} />, label: 'Início' },
     { id: 'transacoes', icon: <ArrowLeftRight size={20} />, label: 'Transações' },
-    { id: 'createGoal', icon: <Plus size={24} />, label: '', isFloat: true },
     { id: 'planejamento', icon: <BarChart3 size={20} />, label: 'Plan.' },
     { id: 'perfil', icon: <User size={20} />, label: 'Perfil' },
   ];
   return (
     <div className="md:hidden fixed bottom-0 left-0 w-full bg-[#1E1E1E] border-t border-gray-800 px-6 py-3 flex justify-between items-center z-50">
       {navItems.map((item) => (
-        <button key={item.id} onClick={() => setActiveTab(item.id)} className={`flex flex-col items-center gap-1 transition-all duration-300 ${item.isFloat ? 'bg-cashGreen text-white p-3 rounded-full -mt-8 shadow-neo-green border-4 border-[#0a0a0a] active:scale-90' : activeTab === item.id ? 'text-cashGreen scale-110' : 'text-gray-500 hover:text-gray-300'}`}>
+        <button key={item.id} onClick={() => setActiveTab(item.id)} className={`flex flex-col items-center gap-1 transition-all duration-300 ${activeTab === item.id ? 'text-cashGreen scale-110' : 'text-gray-500 hover:text-gray-300'}`}>
           {item.icon}
-          {!item.isFloat && <span className="text-[10px] font-medium">{item.label}</span>}
+          <span className="text-[10px] font-medium">{item.label}</span>
         </button>
       ))}
     </div>
@@ -215,7 +228,6 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
     { id: 'dashboard', icon: <Home size={20} />, label: 'Visão Geral' },
     { id: 'transacoes', icon: <ArrowLeftRight size={20} />, label: 'Transações' },
     { id: 'planejamento', icon: <BarChart3 size={20} />, label: 'Planejamento' },
-    { id: 'createGoal', icon: <Plus size={20} />, label: 'Criar Meta' },
     { id: 'perfil', icon: <User size={20} />, label: 'Meu Perfil' },
   ];
   return (
@@ -239,7 +251,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
 
 /* ------------------- TELAS DE USUÁRIO ------------------- */
 
-const DashboardScreen = ({ user, transactions }) => {
+const DashboardScreen = ({ user, transactions, userCategories }) => {
   const [chartPeriod, setChartPeriod] = useState('mes');
   const income = transactions.filter(t => t.tipo === 'income').reduce((acc, curr) => acc + parseFloat(curr.valor), 0);
   const expense = transactions.filter(t => t.tipo === 'expense').reduce((acc, curr) => acc + parseFloat(curr.valor), 0);
@@ -265,7 +277,8 @@ const DashboardScreen = ({ user, transactions }) => {
         </div>
         <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800 md:col-span-2 h-auto md:h-64 flex flex-col animate-in zoom-in-95 duration-500 delay-200">
           <div className="flex justify-between items-center mb-2"><span className="text-white font-bold">Resumo de Gastos</span><div className="flex bg-[#0a0a0a] rounded-lg p-1">{['semana', 'mes', 'ano'].map((period) => (<button key={period} onClick={() => setChartPeriod(period)} className={`px-3 py-1 text-[10px] uppercase font-bold rounded-md transition-all duration-300 ${chartPeriod === period ? 'bg-cashGreen text-black shadow-md' : 'text-gray-500 hover:text-white'}`}>{period}</button>))}</div></div>
-          <div className="flex-1 w-full flex items-center justify-center"><ExpensePieChart transactions={transactions} period={chartPeriod} /></div>
+
+          <div className="flex-1 w-full flex items-center justify-center"><ExpensePieChart transactions={transactions} period={chartPeriod} userCategories={userCategories} /></div>
         </div>
         <div className="col-span-1 md:col-span-3 animate-in slide-in-from-bottom-8 duration-500 delay-300">
            <h3 className="text-gray-400 text-sm mb-4 px-1">Últimas movimentações</h3>
@@ -284,9 +297,13 @@ const DashboardScreen = ({ user, transactions }) => {
   );
 };
 
-const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction }) => {
+const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction, userCategories, onAddCategory, onDeleteCategory }) => {
   const [showForm, setShowForm] = useState(false);
+  const [showCatForm, setShowCatForm] = useState(false);
   const [newTrans, setNewTrans] = useState({ name: '', value: '', type: 'expense', category: 'Outros' });
+  const [newCatName, setNewCatName] = useState('');
+
+  const allCategories = [...DEFAULT_CATEGORIES, ...userCategories];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -300,6 +317,15 @@ const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction
     setNewTrans({ name: '', value: '', type: 'expense', category: 'Outros' });
     setShowForm(false);
   };
+
+  const handleCreateCategory = (e) => {
+      e.preventDefault();
+      if(newCatName) {
+          onAddCategory(newCatName);
+          setNewCatName('');
+          setShowCatForm(false);
+      }
+  }
 
   return (
     <div className="h-full flex flex-col">
@@ -320,16 +346,44 @@ const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputGroup darkTheme placeholder="Descrição (ex: Mercado)" value={newTrans.name} onChange={e => setNewTrans({...newTrans, name: e.target.value})} />
                 <InputGroup darkTheme placeholder="Valor (ex: 150.00)" type="number" value={newTrans.value} onChange={e => setNewTrans({...newTrans, value: e.target.value})} />
+                
                 {newTrans.type === 'expense' && (
                   <div className="md:col-span-2 flex flex-col gap-2 animate-in fade-in duration-300">
-                     <label className="text-gray-300 font-bold text-xs ml-1">Categoria</label>
-                     <div className="flex flex-wrap gap-2">
-                        {Object.keys(CATEGORIES).map(cat => (
-                           <button key={cat} type="button" onClick={() => setNewTrans({...newTrans, category: cat})} className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${newTrans.category === cat ? 'border-transparent text-black' : 'border-gray-700 text-gray-400 hover:border-gray-500'}`} style={{ backgroundColor: newTrans.category === cat ? CATEGORIES[cat].color : 'transparent' }}>{cat}</button>
-                        ))}
-                     </div>
+                       <div className="flex justify-between items-center">
+                          <label className="text-gray-300 font-bold text-xs ml-1">Categoria</label>
+                          <button type="button" onClick={() => setShowCatForm(!showCatForm)} className="text-cashGreen text-xs font-bold hover:underline flex items-center gap-1"><Plus size={12}/> Nova Categoria</button>
+                       </div>
+                       
+                       {showCatForm && (
+                           <div className="flex gap-2 mb-2 animate-in slide-in-from-top-2">
+                               <input type="text" placeholder="Nome da nova categoria" className="flex-1 bg-[#2C2C2C] text-white rounded-lg px-3 py-2 text-xs outline-none focus:ring-1 focus:ring-cashGreen" value={newCatName} onChange={e => setNewCatName(e.target.value)} />
+                               <button type="button" onClick={handleCreateCategory} className="bg-cashGreen text-black px-3 py-2 rounded-lg text-xs font-bold hover:bg-green-400">Salvar</button>
+                           </div>
+                       )}
+
+                       <div className="flex flex-wrap gap-3 p-2 max-h-32 overflow-y-auto custom-scrollbar">
+                          {allCategories.map(cat => {
+                             const isCustom = !!cat.id;
+                             return (
+                               <div key={cat.nome || cat.id} className="relative group">
+                                  <button type="button" onClick={() => setNewTrans({...newTrans, category: cat.nome})} className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${newTrans.category === cat.nome ? 'border-transparent text-black' : 'border-gray-700 text-gray-400 hover:border-gray-500'}`} style={{ backgroundColor: newTrans.category === cat.nome ? cat.cor : 'transparent' }}>{cat.nome}</button>
+                                  {isCustom && (
+                                      <button 
+                                          type="button"
+                                          onClick={(e) => { e.stopPropagation(); onDeleteCategory(cat.id); }}
+                                          className="absolute -top-2 -right-2 z-10 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-all shadow-md hover:scale-110"
+                                          title="Excluir Categoria"
+                                      >
+                                          <X size={12} strokeWidth={3} />
+                                      </button>
+                                  )}
+                               </div>
+                             );
+                          })}
+                       </div>
                   </div>
                 )}
+                
                 <div className="mt-4 md:col-span-2"><PrimaryButton label="Confirmar" onClick={handleSubmit} /></div>
               </div>
            </form>
@@ -406,9 +460,28 @@ const ProfileScreen = ({ user, onUpdateUser, showAlert }) => {
   const [formData, setFormData] = useState(user);
   const fileInputRef = useRef(null);
   
-  const handleFileChange = (event) => { const file = event.target.files[0]; if (file) { const reader = new FileReader(); reader.onloadend = () => setFormData({ ...formData, avatar: reader.result }); reader.readAsDataURL(file); } };
+  const handleFileChange = (event) => { 
+      const file = event.target.files[0]; 
+      if (file) { 
+          const reader = new FileReader(); 
+          reader.onloadend = () => setFormData({ ...formData, avatar: reader.result }); 
+          reader.readAsDataURL(file); 
+      } 
+  };
+  
   const handleRemovePhoto = () => setFormData({ ...formData, avatar: null });
-  const handleSave = (e) => { e.preventDefault(); onUpdateUser(formData); showAlert('Sucesso!', 'Seu perfil foi atualizado.', 'success'); };
+  
+  const handleSave = async (e) => { 
+      e.preventDefault(); 
+      try {
+          const response = await axios.put(`http://localhost:8080/api/users/${user.id}`, formData);
+          onUpdateUser(response.data);
+          showAlert('Sucesso!', 'Seu perfil foi atualizado e salvo!.', 'success');
+      } catch (error) {
+          console.error("Erro ao atualizar perfil:", error);
+          showAlert('Erro', 'Não foi possível salvar as alterações.', 'error');
+      }
+  };
 
   return (
     <div className="px-6 md:px-0 pt-10 md:pt-0 pb-24 md:pb-0 max-w-2xl mx-auto md:mx-0">
@@ -503,6 +576,7 @@ function App() {
   const [user, setUser] = useState(() => { const saved = localStorage.getItem('cashplus_user'); return saved ? JSON.parse(saved) : { name: '', email: '', avatar: null }; });
   const [transactions, setTransactions] = useState([]);
   const [goals, setGoals] = useState([]);
+  const [userCategories, setUserCategories] = useState([]); 
 
   useEffect(() => { localStorage.setItem('cashplus_user', JSON.stringify(user)); }, [user]);
 
@@ -511,8 +585,13 @@ function App() {
       try {
           const resTrans = await axios.get(`http://localhost:8080/api/transactions?userId=${user.id}`);
           setTransactions(resTrans.data);
+          
           const resGoals = await axios.get(`http://localhost:8080/api/goals?userId=${user.id}`);
           setGoals(resGoals.data);
+
+          const resCats = await axios.get(`http://localhost:8080/api/categorias?userId=${user.id}`);
+          setUserCategories(resCats.data);
+
       } catch (err) {
           console.error("Erro ao buscar dados do usuário:", err);
       }
@@ -535,7 +614,7 @@ function App() {
               nomeCategoria: t.nomeCategoria 
           });
           setTransactions([...transactions, res.data]);
-          showAlert('Sucesso', 'Transação registrada no banco!', 'success');
+          showAlert('Sucesso', 'Transação registrada!', 'success');
       } catch (error) {
           showAlert('Erro', 'Não foi possível salvar a transação.', 'error');
       }
@@ -605,6 +684,33 @@ function App() {
      }
   };
 
+  const handleAddCategory = async (name) => {
+      try {
+          const randomColor = generateRandomColor();
+          const res = await axios.post('http://localhost:8080/api/categorias', {
+              nome: name,
+              tipo: 'despesa', 
+              userId: user.id,
+              cor: randomColor
+          });
+          const newCat = res.data;
+          setUserCategories([...userCategories, newCat]);
+          showAlert('Sucesso', 'Categoria criada!', 'success');
+      } catch (err) {
+          showAlert('Erro', 'Falha ao criar categoria.', 'error');
+      }
+  };
+
+  const handleDeleteCategory = async (id) => {
+      try {
+          await axios.delete(`http://localhost:8080/api/categorias/${id}`);
+          setUserCategories(userCategories.filter(cat => cat.id !== id));
+          showAlert('Sucesso', 'Categoria removida.', 'success');
+      } catch (err) {
+          showAlert('Erro', 'Falha ao remover categoria.', 'error');
+      }
+  };
+
   const handleAuth = async () => {
      if(authData.email) {
         const domain = authData.email.split('@')[1];
@@ -642,12 +748,6 @@ function App() {
          showAlert('Bem-vindo!', 'Sua conta foi criada e salva.', 'success');
 
        } else {
-         if (authData.email === 'admin@cashplus.com' && authData.password === 'admin123') {
-            setUser({ name: 'Administrador', email: 'admin@cashplus.com', role: 'ADMIN' });
-            setCurrentScreen('admin');
-            return;
-         }
-
          const res = await axios.post('http://localhost:8080/api/users/login', {
             email: authData.email,
             senha: authData.password
@@ -677,6 +777,7 @@ function App() {
       localStorage.removeItem('cashplus_user'); 
       setTransactions([]); 
       setGoals([]); 
+      setUserCategories([]);
   };
 
   const renderContent = () => {
@@ -684,9 +785,9 @@ function App() {
       <div key={activeTab} className="animate-in fade-in slide-in-from-bottom-8 duration-500 ease-out">
         {(() => {
           switch(activeTab) {
-             case 'dashboard': return <DashboardScreen user={user} transactions={transactions} />;
+             case 'dashboard': return <DashboardScreen user={user} transactions={transactions} userCategories={userCategories} />; // Passando categorias para o dashboard
              case 'perfil': return <ProfileScreen user={user} onUpdateUser={setUser} showAlert={showAlert} />;
-             case 'transacoes': return <TransactionScreen transactions={transactions} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} />;
+             case 'transacoes': return <TransactionScreen transactions={transactions} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} userCategories={userCategories} onAddCategory={handleAddCategory} onDeleteCategory={handleDeleteCategory} />;
              case 'createGoal': 
              case 'planejamento': return <PlanningScreen goals={goals} onAddGoal={handleAddGoal} onDeleteGoal={handleDeleteGoal} onDepositToGoal={handleDepositToGoal} onEditGoal={handleEditGoal} showAlert={showAlert} />;
              default: return <DashboardScreen user={user} transactions={transactions} />;

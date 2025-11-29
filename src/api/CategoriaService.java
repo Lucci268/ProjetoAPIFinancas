@@ -14,11 +14,15 @@ public class CategoriaService {
         return repository.save(categoria);
     }
 
-    public List<Categoria> buscarTodas() {
-        return repository.findAll();
+    public List<Categoria> buscarPorUsuario(Long userId) {
+        return repository.findByUserId(userId);
     }
 
     public Categoria buscarPorId(Long id) {
         return repository.findById(id).orElse(null);
     }
-}
+    
+    public void deletar(Long id) {
+        repository.deleteById(id);
+    }
+}  

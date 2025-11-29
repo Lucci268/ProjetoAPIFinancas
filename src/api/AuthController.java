@@ -25,10 +25,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         User logado = userService.login(user.getEmail(), user.getSenha());
-        
         if (logado == null) {
             return ResponseEntity.status(401).body("Email ou senha inválidos");
         }
         return ResponseEntity.ok(logado);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> atualizarUsuario(@PathVariable Long id, @RequestBody User user) {
+        User atualizado = userService.atualizar(id, user);
+        if (atualizado == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(atualizado);
     }
 }

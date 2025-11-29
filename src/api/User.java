@@ -8,22 +8,31 @@ import jakarta.validation.constraints.Pattern;
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank @Email @Column(unique = true)
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Formato de email inválido")
+    @Column(unique = true)
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Senha é obrigatória")
     private String senha;
 
-    @Pattern(regexp = "^\\d{11}$")
+    @Pattern(regexp = "^\\d{11}$", message = "Telefone deve ter 11 dígitos")
     private String telefone;
 
     private String name;
     private String role;
 
+    @Column(columnDefinition = "TEXT")
+    private String avatar;
+
+    public User() {}
+
+    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getEmail() { return email; }
@@ -36,4 +45,6 @@ public class User {
     public void setName(String name) { this.name = name; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+    public String getAvatar() { return avatar; }
+    public void setAvatar(String avatar) { this.avatar = avatar; }
 }

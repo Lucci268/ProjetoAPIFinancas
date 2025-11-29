@@ -33,4 +33,14 @@ public class UserService {
     public List<User> buscarTodos() {
         return userRepository.findAll();
     }
+
+    public User atualizar(Long id, User dadosNovos) {
+        return userRepository.findById(id).map(user -> {
+            if (dadosNovos.getName() != null) user.setName(dadosNovos.getName());
+            if (dadosNovos.getEmail() != null) user.setEmail(dadosNovos.getEmail());
+            if (dadosNovos.getTelefone() != null) user.setTelefone(dadosNovos.getTelefone());
+            if (dadosNovos.getAvatar() != null) user.setAvatar(dadosNovos.getAvatar());
+            return userRepository.save(user);
+        }).orElse(null);
+    }
 }
