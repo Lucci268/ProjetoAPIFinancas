@@ -25,6 +25,11 @@ const CUSTOM_COLORS = [
   '#BA68C8', '#FFB74D', '#4DB6AC'
 ];
 
+const generateRandomColor = () => {
+  const index = Math.floor(Math.random() * CUSTOM_COLORS.length);
+  return CUSTOM_COLORS[index];
+};
+
 const getColorByName = (name) => {
   if (!name) return '#90A4AE';
   const defaultCat = DEFAULT_CATEGORIES.find(c => c.nome === name);
