@@ -2,6 +2,7 @@ package api;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -10,9 +11,12 @@ public class Reminder implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private Long userId;
     private String descricao;
     private LocalDate dataVencimento;
+    
+    private BigDecimal valor;
 
     public Reminder() {}
 
@@ -24,4 +28,6 @@ public class Reminder implements Serializable {
     public void setDescricao(String descricao) { this.descricao = descricao; }
     public LocalDate getDataVencimento() { return dataVencimento; }
     public void setDataVencimento(LocalDate dataVencimento) { this.dataVencimento = dataVencimento; }
+    public BigDecimal getValor() { return valor; }
+    public void setValor(BigDecimal valor) { this.valor = valor; }
 }
