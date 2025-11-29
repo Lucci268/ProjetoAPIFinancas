@@ -1,14 +1,22 @@
-# 💸 Cash+ - API de Finanças Pessoais
-
 <div align="center">
-  
-![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge)
-![Java](https://img.shields.io/badge/Backend-Java-ED8B00?style=for-the-badge)
-![Spring Boot](https://img.shields.io/badge/Framework-Spring%20Boot-6DB33F?style=for-the-badge)
+  <img width="300" alt="logo" src="https://github.com/user-attachments/assets/cd3969ab-fba6-49c0-aea0-717575399c0e" />
+
+  <h3 style="margin-top: 10px;">API de Finanças Pessoais</h3>
+
+  <br />
+
+![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Build-Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Java](https://img.shields.io/badge/Backend-Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Framework-Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![**Projeto Acadêmico**](https://img.shields.io/badge/📚-Projeto%20Acadêmico-success?style=for-the-badge)
+
+---
+
 </div>
 
-### ✨ Contribuidores
+### 👨‍💻 Contribuidores
 
 <div align="center">
 
@@ -20,118 +28,106 @@
 
 ---
 
-Este repositório contém o código-fonte da API para um sistema de finanças pessoais. O objetivo é criar uma aplicação robusta que permita a usuários controlar suas finanças, registrar transações, criar metas e gerar relatórios, enquanto administradores mantêm o sistema organizado e monitoram o uso da plataforma.
+Este repositório contém o código-fonte completo (Frontend e Backend) do sistema **Cash+**. A aplicação permite que usuários controlem suas finanças, registrem transações, criem metas financeiras e visualizem relatórios, enquanto administradores mantêm o sistema organizado e monitoram o uso da plataforma.
+
+---
+
+## 🖥️ Visualização do Sistema
+
+Abaixo, uma captura de tela da interface do usuário, demonstrando o painel principal com o resumo financeiro, metas e histórico de transações.
+
+<div align="center">
+  <img width="800" alt="Captura de tela 2025-11-28 213406" src="https://github.com/user-attachments/assets/6d9567bf-7c60-4f89-9106-bed086922bfe" />
+</div>
 
 ---
 
 ### 1. Criação de Protótipos de Lo-Fi (Figma)
-- Foram elaborados **sketches e storyboards** para representar o fluxo das histórias de usuário (**mínimo de 10 telas**).  
-- Protótipo Lo-Fi disponível no Figma: [🔗 Link para o Figma](https://www.figma.com/design/jufpasxokV5zpu8cvFCZ25/Cash-?node-id=0-1&t=zuDA5kGo0uqpAJZK-1)  
+- Foram elaborados **sketches e storyboards** para representar o fluxo das histórias de usuário.
+- Protótipo Lo-Fi disponível no Figma: [🔗 Link para o Figma](https://www.figma.com/design/jufpasxokV5zpu8cvFCZ25/Cash-?node-id=0-1&t=zuDA5kGo0uqpAJZK-1)
 - **Screencast** apresentando o protótipo: [🎥 Link para o vídeo](https://github.com/user-attachments/assets/ff81ff60-9067-4536-a611-31549dc60490)
 
 ---
 
 ### 2. Diagrama de Atividades do Sistema
-O diagrama de atividades (UML) mostra o fluxo principal do sistema.  
-- Disponível em: [📄Link para o Canva](https://www.canva.com/design/DAG1by7sao8/s8fswB0WtQV45PrH30zFrg/edit?utm_content=DAG1by7sao8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)  
+O diagrama de atividades (UML) mostra o fluxo principal do sistema.
+- Disponível em: [📄Link para o Canva](https://www.canva.com/design/DAG1by7sao8/s8fswB0WtQV45PrH30zFrg/edit?utm_content=DAG1by7sao8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ---
 
-### 3. Issue / Bug Tracker Atualizado (GitHub)
-Utilizamos o **GitHub Issues** para acompanhamento de tarefas, melhorias e bugs.  
-- **Print da tela do GitHub Issues:**  
+### 3. Issue / Bug Tracker (GitHub)
+Utilizamos o **GitHub Issues** para acompanhamento de tarefas, melhorias e bugs durante o desenvolvimento.
 
 <div align="center">
-  <img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180235.png?raw=true" alt="Print Issues GitHub" width="50%">
-</div>
-
-<div align="center">
-  <img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180330.png?raw=true" alt="Print Issues GitHub" width="50%">
+  <img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180235.png?raw=true" alt="Print Issues GitHub" width="45%">
+  <img src="https://github.com/D4n1el20/ImagensProjetoAPIFinancas/blob/main/Captura%20de%20tela%202025-10-20%20180330.png?raw=true" alt="Print Issues GitHub" width="45%">
 </div>
 
 ---
 
-### 4. Quadro Atualizado Refletindo a Entrega
-O andamento do projeto está sendo acompanhado no **Trello (Kanban)**.  
-Apresentação do trabalho com slides ,disponível no [Canva:](https://www.canva.com/design/DAG5VKDXrUU/1AMUgQZa77P80FfcCkxgHQ/edit?utm_content=DAG5VKDXrUU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
-- **Print do quadro da sprint atual:**  
+### 4. Gestão do Projeto (Kanban)
+O andamento do projeto foi acompanhado no **Trello**.
+- Apresentação do trabalho com slides disponível no [Canva](https://www.canva.com/design/DAG5VKDXrUU/1AMUgQZa77P80FfcCkxgHQ/edit?utm_content=DAG5VKDXrUU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/97897e73-8195-4f33-804c-fdb5e38f0683" alt="Quadro da Sprint" width="50%">
 </div>
 
-- **Print do backlog:**  
+---
 
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/598ac91c-106b-43c7-bc40-888b70f13301" alt="Backlog" width="20%">
-</div>
+## 💻 Tecnologias Utilizadas
+
+**Backend:**
+- **Java 17** & **Spring Boot 3.3.2**
+- **Spring Data JPA** (Persistência de dados)
+- **PostgreSQL** (Banco de dados relacional)
+- **Bean Validation** (Validação de entradas)
+- **Spring Security Crypto** (Criptografia de senhas)
+
+**Frontend:**
+- **React** (Biblioteca UI)
+- **Vite** (Build tool)
+- **Tailwind CSS** (Estilização)
+- **Axios** (Integração com API)
+- **Recharts** (Gráficos e relatórios)
+- **Lucide React** (Ícones)
 
 ---
 
-## 📝 Descrição do Projeto
-
-A API serve como backend de uma aplicação de finanças pessoais. Usuários podem registrar receitas e despesas, organizar suas movimentações por categorias, acompanhar metas de economia e visualizar relatórios financeiros. Administradores gerenciam categorias, configuram limites, acompanham estatísticas e garantem a integridade dos dados. O projeto segue metodologia ágil, com histórias de usuário organizadas em um quadro Kanban.
-
----
-
-## ✨ Funcionalidades (Histórias de Usuário)
+## ✨ Funcionalidades Implementadas
 
 ### Para Usuários
-- **Cadastro:** Registrar-se utilizando e-mail, senha e número de telefone. (Sprint 1)
-- **Visualizar Contas:** Consultar todas as contas e saldos. (Sprint 1)
-- **Registrar Transações:** Inserir receitas e despesas. (Sprint 2)
-- **Categorias:** Categorizar movimentações para melhor organização. (Sprint 2)
-- **Filtros:** Filtrar movimentações por data, categoria ou valor. (Sprint 3)
-- **Relatórios:** Visualizar gráficos e relatórios de receitas e despesas. (Sprint 4)
-- **Metas de Economia:** Criar metas financeiras e acompanhar o progresso. (Sprint 3 & 4)
-- **Alertas:** Receber notificações de gastos acima do planejado. (Sprint 5)
-- **Recomendações:** Receber sugestões de economia baseadas nos gastos. (Sprint 5)
-- **Termos de Uso:** Visualizar termos do sistema antes do cadastro. (Sprint 1)
+- **Autenticação:** Cadastro e Login com e-mail, senha e avatar.
+- **Dashboard:** Visão geral do saldo, gráfico de despesas por categoria e últimas movimentações.
+- **Transações:** Registro de receitas e despesas com categorização e datas personalizadas.
+- **Metas Financeiras:** Criação de objetivos de economia (ex: "Computador Novo") com barra de progresso visual.
+- **Lembretes:** Sistema de lembretes para pagamentos futuros.
+- **Perfil:** Edição de dados cadastrais e foto de perfil.
+- **Termos de Uso:** Visualização dos termos legais da aplicação.
 
 ### Para Administradores
-- **Gerenciamento de Categorias:** Criar, atualizar e excluir categorias de receitas e despesas. (Sprint 1)
-- **Relatórios Agregados:** Visualizar relatórios consolidados de todas as movimentações registradas. (Sprint 2)
-- **Validação de Dados:** Gerenciar regras para garantir consistência dos registros financeiros. (Sprint 2)
-- **Estatísticas de Uso:** Acompanhar crescimento de usuários e atividades. (Sprint 3)
+- **Painel Admin:** Visualização de estatísticas gerais do sistema (total de usuários, usuários ativos).
+- **Gestão de Regras:** Criação e edição de regras de validação do sistema.
+- **Relatórios Globais:** Acesso a dados de transações agregados para análise.
 
 ---
 
-## 🛠️ Estrutura da API (Endpoints)
+## 🛠️ Estrutura da API (Principais Endpoints)
 
-| Método | Rota                     | Descrição                                        | Responsável(eis)         |
-| :----- | :----------------------- | :----------------------------------------------- | :----------------------- |
-| `POST` | `/users`                 | Cadastra um novo usuário                        | Lucciano                 |
-| `GET`  | `/users/:id/accounts`     | Lista os registros financeiros de um usuário    | Júlio                    |
-| `POST` | `/transactions`          | Registra uma nova receita ou despesa            | Felipe                   |
-| `GET`  | `/transactions`          | Lista todas as movimentações filtradas por critérios | Artur               |
-| `POST` | `/categories`            | Cadastra categorias de receita/despesa          | Davi                     |
-| `GET`  | `/reports`               | Gera relatórios financeiros agregados           | Daniel                   |
-| `PATCH`| `/limits/:categoryId`    | Define o limite planejado de gastos para uma categoria | Lucciano           |
-| `GET`  | `/statistics`            | Consulta estatísticas gerais do sistema         | Júlio                    |
-
----
-
-## 👥 Atribuições
-
-| Nome Completo | Responsabilidades |
-|----------------|-------------------|
-| **Artur Lima Pinto Bacalhau** | Endpoints de transações e filtros |
-| **Daniel Silva Costa** | Modelagem e conexão do banco de dados, relatórios |
-| **Davi Magalhães Mendes** | Categorias de receitas e despesas |
-| **Felipe Assis Ferreira dos Santos** | Registro de transações |
-| **Júlio César Bizarria Lins** | Visualização de saldos consolidados, relatórios e estatísticas |
-| **Lucciano Henrique Pereira Cordeiro** | Cadastro de usuários e configuração de limites |
+| Controller | Rota Base | Descrição |
+| :--- | :--- | :--- |
+| **Auth** | `/api/users` | Registro e Login de usuários (`/register`, `/login`, `/{id}`). |
+| **Transacao** | `/api/transactions` | CRUD de transações e filtros por data/valor/categoria. |
+| **Meta** | `/api/goals` | Gerenciamento de metas financeiras do usuário. |
+| **Categoria** | `/api/categorias` | Criação e listagem de categorias personalizadas. |
+| **Lembrete** | `/api/reminders` | Gerenciamento de lembretes de vencimento. |
+| **Admin** | `/api/admin` | Rotas protegidas para listagem de usuários e estatísticas (`/statistics`). |
+| **Termos** | `/api/terms-of-use` | Texto dos termos de uso. |
 
 ---
 
-## 🧾 Patch Note
-**Versão:** `0.1.0-alpha.1`  
-Disponível em: [📄 Link para Screen catch](https://youtu.be/feqsMQkV2AM)
+### Pré-requisitos
 
----
-
-## 📊 Status do Projeto
-
-O projeto encontra-se em fase de desenvolvimento. As tarefas estão sendo distribuídas e executadas conforme o planejamento inicial. O foco atual está na construção das rotas essenciais da API, registro de transações e modelagem do banco de dados.
-
----
+- Java 17+
+- Node.js & npm
+- PostgreSQL (Banco de dados criado com nome `cashplus_db`)
