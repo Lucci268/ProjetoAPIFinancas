@@ -867,7 +867,7 @@ function App() {
                {isRegister && (
                    <>
                     <InputGroup label="Confirmar Senha" placeholder="********" isPassword value={authData.confirmPassword} onChange={(e) => setAuthData({...authData, confirmPassword: e.target.value})} />
-                    <InputGroup label="Telefone" placeholder="81999999999" type="tel" maxLength={11} value={authData.phone} onChange={(e) => setAuthData({...authData, phone: e.target.value})} />
+                    <InputGroup label="Telefone" placeholder="Insira seu telefone" type="tel" maxLength={11} value={authData.phone} onChange={(e) => setAuthData({...authData, phone: e.target.value})} />
                     
                     <div className="flex items-center gap-2 mt-1 mb-3">
                         <input 
