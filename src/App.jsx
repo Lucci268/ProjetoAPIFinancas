@@ -476,7 +476,7 @@ const ProfileScreen = ({ user, onUpdateUser, showAlert }) => {
       try {
           const response = await axios.put(`http://localhost:8080/api/users/${user.id}`, formData);
           onUpdateUser(response.data);
-          showAlert('Sucesso!', 'Seu perfil foi atualizado e salvo!.', 'success');
+          showAlert('Sucesso!', 'Seu perfil foi atualizado e salvo!', 'success');
       } catch (error) {
           console.error("Erro ao atualizar perfil:", error);
           showAlert('Erro', 'Não foi possível salvar as alterações.', 'error');
