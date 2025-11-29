@@ -107,8 +107,6 @@ O andamento do projeto foi acompanhado no **Trello**.
 
 ### Para Administradores
 - **Painel Admin:** Visualização de estatísticas gerais do sistema (total de usuários, usuários ativos).
-- **Gestão de Regras:** Criação e edição de regras de validação do sistema.
-- **Relatórios Globais:** Acesso a dados de transações agregados para análise.
 
 ---
 
