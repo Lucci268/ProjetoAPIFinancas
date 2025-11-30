@@ -20,6 +20,15 @@ public class ReminderService {
         return repository.findByUserId(userId);
     }
 
+    public Reminder atualizar(Long id, Reminder novo) {
+        return repository.findById(id).map(r -> {
+            if (novo.getDescricao() != null) r.setDescricao(novo.getDescricao());
+            if (novo.getValor() != null) r.setValor(novo.getValor());
+            if (novo.getDataVencimento() != null) r.setDataVencimento(novo.getDataVencimento());
+            return repository.save(r);
+        }).orElse(null);
+    }
+
     public boolean remover(Long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);

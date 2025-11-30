@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import logoImg from './assets/logo.png'; 
 
@@ -64,6 +65,16 @@ const formatDate = (dateString) => {
 
 /* ------------------- COMPONENTES UI ------------------- */
 
+const PortalModal = ({ children, isOpen }) => {
+  if (!isOpen) return null;
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+      {children}
+    </div>,
+    document.body
+  );
+};
+
 const Logo = ({ small = false }) => (
   <div className={`flex items-center ${small ? 'justify-start pl-2 py-2' : 'justify-center mb-4'} animate-in fade-in duration-700`}>
     <img 
@@ -74,29 +85,21 @@ const Logo = ({ small = false }) => (
   </div>
 );
 
-
 const SystemPopup = ({ isOpen, onClose, type = 'success', title, message, onConfirm }) => {
-  if (!isOpen) return null;
-
-  const config = {
-    success: { icon: <CheckCircle size={32} className="text-cashGreen" />, color: 'border-cashGreen/50', bgIcon: 'bg-cashGreen/10', btn: 'bg-cashGreen text-black hover:bg-green-400' },
-    error: { icon: <AlertCircle size={32} className="text-red-500" />, color: 'border-red-500/50', bgIcon: 'bg-red-500/10', btn: 'bg-red-500 text-white hover:bg-red-600' },
-    confirm: { icon: <HelpCircle size={32} className="text-yellow-500" />, color: 'border-yellow-500/50', bgIcon: 'bg-yellow-500/10', btn: 'bg-yellow-500 text-black hover:bg-yellow-400' }
-  };
-  const currentConfig = config[type] || config.success;
-
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-      <div className={`bg-[#1E1E1E] border ${currentConfig.color} p-6 rounded-2xl w-full max-w-xs flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300`}>
-        <div className={`w-16 h-16 ${currentConfig.bgIcon} rounded-full flex items-center justify-center mb-4`}>{currentConfig.icon}</div>
+    <PortalModal isOpen={isOpen}>
+      <div className={`bg-[#1E1E1E] border ${type === 'error' ? 'border-red-500/50' : 'border-cashGreen/50'} p-6 rounded-2xl w-full max-w-xs flex flex-col items-center text-center shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-300`}>
+        <div className={`w-16 h-16 ${type === 'error' ? 'bg-red-500/10 text-red-500' : 'bg-cashGreen/10 text-cashGreen'} rounded-full flex items-center justify-center mb-4`}>
+            {type === 'error' ? <AlertCircle size={32} /> : type === 'confirm' ? <HelpCircle size={32} className="text-yellow-500" /> : <CheckCircle size={32} />}
+        </div>
         <h3 className="text-white text-xl font-bold mb-2">{title}</h3>
         <p className="text-gray-400 text-sm mb-6 leading-relaxed">{message}</p>
         <div className="flex gap-3 w-full">
           {type === 'confirm' && <button onClick={onClose} className="flex-1 py-3 rounded-xl bg-gray-700 text-white font-bold hover:bg-gray-600">Cancelar</button>}
-          <button onClick={() => { if (onConfirm) onConfirm(); onClose(); }} className={`flex-1 py-3 rounded-xl font-bold shadow-lg active:scale-95 ${currentConfig.btn}`}>{type === 'confirm' ? 'Sim, confirmar' : 'Entendido'}</button>
+          <button onClick={() => { if (onConfirm) onConfirm(); onClose(); }} className={`flex-1 py-3 rounded-xl font-bold shadow-lg active:scale-95 ${type === 'error' ? 'bg-red-500 text-white' : type === 'confirm' ? 'bg-yellow-500 text-black' : 'bg-cashGreen text-black'}`}>{type === 'confirm' ? 'Sim, confirmar' : 'Entendido'}</button>
         </div>
       </div>
-    </div>
+    </PortalModal>
   );
 };
 
@@ -184,7 +187,6 @@ const ExpensePieChart = ({ transactions, period, userCategories }) => {
       const deg = percent * 360;
       const foundCat = allCats.find(c => c.nome === catName);
       const color = foundCat ? (foundCat.cor || foundCat.color) : getColorByName(catName);
-      
       gradientString += `${color} ${currentDeg}deg ${currentDeg + deg}deg, `;
       currentDeg += deg;
       legendData.push({ label: catName, value: totalsByCategory[catName], color: color, percent: (percent * 100).toFixed(0) });
@@ -267,7 +269,7 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, user, transactions = [] })
 
 /* ------------------- TELAS DE USUÁRIO ------------------- */
 
-const DashboardScreen = ({ user, transactions, userCategories, reminders = [] }) => {
+const DashboardScreen = ({ user, transactions, userCategories, reminders = [], onPayReminder }) => {
   const [chartPeriod, setChartPeriod] = useState('mes');
   const income = transactions.filter(t => t.tipo === 'income').reduce((acc, curr) => acc + parseFloat(curr.valor), 0);
   const expense = transactions.filter(t => t.tipo === 'expense').reduce((acc, curr) => acc + parseFloat(curr.valor), 0);
@@ -340,7 +342,16 @@ const DashboardScreen = ({ user, transactions, userCategories, reminders = [] })
                                     </p>
                                 </div>
                             </div>
-                            <span className="text-white text-xs font-bold">{val}</span>
+                            <div className="flex flex-col items-end">
+                                <span className="text-white text-xs font-bold mb-1">{val}</span>
+                                <button 
+                                    onClick={() => onPayReminder(rem.id)}
+                                    className="bg-cashGreen text-black p-1 rounded-full hover:scale-110 transition-transform"
+                                    title="Pagar Conta"
+                                >
+                                    <Check size={12} strokeWidth={3} />
+                                </button>
+                            </div>
                         </div>
                     );
                 })
@@ -425,6 +436,7 @@ const TransactionScreen = ({ transactions, onAddTransaction, onDeleteTransaction
                           {allCategories.map(cat => {
                              const isCustom = !!cat.id;
                              const catColor = cat.cor || cat.color || getColorByName(cat.nome);
+                             
                              return (
                                <div key={cat.nome || cat.id} className="relative group">
                                   <button type="button" onClick={() => setNewTrans({...newTrans, category: cat.nome})} className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${newTrans.category === cat.nome ? 'border-transparent text-black' : 'border-gray-700 text-gray-400 hover:border-gray-500'}`} style={{ backgroundColor: newTrans.category === cat.nome ? catColor : 'transparent' }}>{cat.nome}</button>
@@ -474,7 +486,7 @@ const PlanningScreen = ({ goals, reminders, onAddGoal, onDeleteGoal, onDepositTo
 
    const [activeTab, setActiveTab] = useState('goals'); 
    const [isCreatingReminder, setIsCreatingReminder] = useState(false);
-   const [newReminder, setNewReminder] = useState({ descricao: '', dataVencimento: '', valor: '' }); // ADICIONADO VALOR
+   const [newReminder, setNewReminder] = useState({ descricao: '', dataVencimento: '', valor: '' });
 
    const handleCreateGoal = () => { if(!newGoal.description || !newGoal.total) return; onAddGoal(newGoal); setNewGoal({ description: '', total: '', current: '0' }); setIsCreatingGoal(false); };
    const confirmDeposit = () => { if(!depositValue || parseFloat(depositValue) <= 0) return; onDepositToGoal(depositModal.goalId, depositValue); setDepositModal({ isOpen: false, goalId: null }); setDepositValue(''); };
@@ -497,6 +509,7 @@ const PlanningScreen = ({ goals, reminders, onAddGoal, onDeleteGoal, onDepositTo
                  <button onClick={() => setActiveTab('goals')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'goals' ? 'bg-cashGreen text-black shadow-lg' : 'text-gray-400 hover:text-white'}`}>Metas</button>
                  <button onClick={() => setActiveTab('reminders')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'reminders' ? 'bg-cashGreen text-black shadow-lg' : 'text-gray-400 hover:text-white'}`}>Contas a Pagar</button>
              </div>
+             
              {activeTab === 'goals' ? (
                  <PrimaryButton label={isCreatingGoal ? "Cancelar" : "Nova Meta"} icon={isCreatingGoal ? <X size={18}/> : <Plus size={18}/>} onClick={() => setIsCreatingGoal(!isCreatingGoal)} fullWidth={false}/>
              ) : (
@@ -504,28 +517,37 @@ const PlanningScreen = ({ goals, reminders, onAddGoal, onDeleteGoal, onDepositTo
              )}
          </div>
 
+         <PortalModal isOpen={depositModal.isOpen}>
+            <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700">
+                <h3 className="text-white font-bold text-lg mb-4">Guardar dinheiro</h3>
+                <InputGroup placeholder="Valor (ex: 50.00)" type="number" darkTheme value={depositValue} onChange={(e) => setDepositValue(e.target.value)} />
+                <div className="flex gap-3 mt-4">
+                    <button onClick={() => setDepositModal({ isOpen: false, goalId: null })} className="flex-1 py-3 rounded-full text-gray-400 font-bold hover:bg-gray-800">Cancelar</button>
+                    <button onClick={confirmDeposit} className="flex-1 py-3 rounded-full bg-cashGreen text-black font-bold hover:bg-green-400">Confirmar</button>
+                </div>
+            </div>
+         </PortalModal>
+
+         <PortalModal isOpen={editModal.isOpen && editModal.goal}>
+            <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-white font-bold text-lg">Editar Meta</h3>
+                    <button onClick={() => setEditModal({ isOpen: false, goal: null })} className="text-gray-400 hover:text-white"><X size={20} /></button>
+                </div>
+                <InputGroup label="Nome da Meta" darkTheme value={editModal.goal?.descricao || ''} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, descricao: e.target.value }})} />
+                <InputGroup label="Valor Total (R$)" type="number" darkTheme value={editModal.goal?.valorMeta || ''} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, valorMeta: e.target.value }})} />
+                <div className="flex flex-col gap-3 mt-6">
+                    <PrimaryButton label="Salvar Alterações" onClick={handleSaveEdit} />
+                    <button onClick={handleDeleteFromModal} className="w-full py-3 rounded-full bg-red-500/10 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2 border border-red-500/30"><Trash2 size={18} /> Excluir Meta</button>
+                </div>
+            </div>
+         </PortalModal>
+
          {activeTab === 'goals' && (
              <div className="animate-in fade-in slide-in-from-bottom-4">
-                 {depositModal.isOpen && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in">
-                       <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700 animate-in zoom-in-95 slide-in-from-bottom-10"><h3 className="text-white font-bold text-lg mb-4">Guardar dinheiro</h3><InputGroup placeholder="Valor (ex: 50.00)" type="number" darkTheme value={depositValue} onChange={(e) => setDepositValue(e.target.value)} /><div className="flex gap-3 mt-4"><button onClick={() => setDepositModal({ isOpen: false, goalId: null })} className="flex-1 py-3 rounded-full text-gray-400 font-bold hover:bg-gray-800">Cancelar</button><button onClick={confirmDeposit} className="flex-1 py-3 rounded-full bg-cashGreen text-black font-bold hover:bg-green-400">Confirmar</button></div></div>
-                    </div>
-                 )}
-                 {editModal.isOpen && editModal.goal && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in">
-                       <div className="bg-[#1E1E1E] p-6 rounded-2xl w-full max-w-sm border border-gray-700 animate-in zoom-in-95 slide-in-from-bottom-10">
-                          <div className="flex justify-between items-center mb-4"><h3 className="text-white font-bold text-lg">Editar Meta</h3><button onClick={() => setEditModal({ isOpen: false, goal: null })} className="text-gray-400 hover:text-white"><X size={20} /></button></div>
-                          <InputGroup label="Nome da Meta" darkTheme value={editModal.goal.descricao} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, descricao: e.target.value }})} />
-                          <InputGroup label="Valor Total (R$)" type="number" darkTheme value={editModal.goal.valorMeta} onChange={(e) => setEditModal({...editModal, goal: { ...editModal.goal, valorMeta: e.target.value }})} />
-                          <div className="flex flex-col gap-3 mt-6"><PrimaryButton label="Salvar Alterações" onClick={handleSaveEdit} /><button onClick={handleDeleteFromModal} className="w-full py-3 rounded-full bg-red-500/10 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2 border border-red-500/30"><Trash2 size={18} /> Excluir Meta</button></div>
-                       </div>
-                    </div>
-                 )}
-
                  {isCreatingGoal && (
                     <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800 mb-8 max-w-2xl animate-in slide-in-from-top-8 fade-in"><h3 className="text-white font-bold mb-4">Definir nova meta</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div className="md:col-span-2"><InputGroup label="Nome da Meta" placeholder="Ex: Computador Novo" darkTheme value={newGoal.description} onChange={e => setNewGoal({...newGoal, description: e.target.value})} /></div><InputGroup label="Valor Total (R$)" placeholder="Ex: 5000" type="number" darkTheme value={newGoal.total} onChange={e => setNewGoal({...newGoal, total: e.target.value})} /><InputGroup label="Valor Inicial (R$)" placeholder="Ex: 0" type="number" darkTheme value={newGoal.current} onChange={e => setNewGoal({...newGoal, current: e.target.value})} /></div><div className="mt-4 flex justify-end"><div className="w-full md:w-auto"><PrimaryButton label="Salvar Meta" onClick={handleCreateGoal} fullWidth={false} /></div></div></div>
                  )}
-
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {goals.length === 0 && !isCreatingGoal && <div className="col-span-full text-center py-20 text-gray-600 border-2 border-dashed border-gray-800 rounded-2xl animate-in fade-in">Você ainda não criou nenhuma meta.</div>}
                     {goals.map((goal, idx) => {
@@ -573,7 +595,9 @@ const PlanningScreen = ({ goals, reminders, onAddGoal, onDeleteGoal, onDepositTo
                              </div>
                              <div className="flex items-center gap-4">
                                 <span className="text-white text-sm font-bold">{val}</span>
-                                <button onClick={() => onDeleteReminder(rem.id)} className="p-2 text-gray-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"><Trash2 size={18}/></button>
+                                <div className="flex gap-2">
+                                    <button onClick={() => onDeleteReminder(rem.id)} className="p-2 text-black bg-cashGreen hover:bg-green-400 rounded-lg transition-all font-bold flex items-center gap-1 shadow-md" title="Pagar Conta"><Check size={16} strokeWidth={3}/></button>
+                                </div>
                              </div>
                           </div>
                        );
@@ -598,14 +622,18 @@ const ProfileScreen = ({ user, onUpdateUser, showAlert }) => {
       } 
   };
   
-  const handleRemovePhoto = () => setFormData({ ...formData, avatar: null });
+  const handleRemovePhoto = () => {
+      setFormData({ ...formData, avatar: "" }); 
+  };
   
   const handleSave = async (e) => { 
       e.preventDefault(); 
       try {
           const response = await axios.put(`http://localhost:8080/api/users/${user.id}`, formData);
           onUpdateUser(response.data);
-          showAlert('Sucesso!', 'Seu perfil foi atualizado e salvo!', 'success');
+          localStorage.setItem('cashplus_user', JSON.stringify(response.data));
+          
+          showAlert('Sucesso!', 'Seu perfil foi atualizado e salvo.', 'success');
       } catch (error) {
           console.error("Erro ao atualizar perfil:", error);
           showAlert('Erro', 'Não foi possível salvar as alterações.', 'error');
@@ -618,7 +646,7 @@ const ProfileScreen = ({ user, onUpdateUser, showAlert }) => {
       <div className="bg-[#1E1E1E] p-8 rounded-2xl border border-gray-800 animate-in fade-in zoom-in-95 duration-500">
          <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
             <div className="relative group"><UserAvatar user={formData} size="w-32 h-32" textSize="text-4xl" /><button onClick={() => fileInputRef.current.click()} className="absolute bottom-0 right-0 bg-cashGreen text-black p-2 rounded-full border-4 border-[#1E1E1E] hover:bg-green-400 transition-colors"><Camera size={20} /></button><input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" /></div>
-            <div className="text-center md:text-left flex-1"><h3 className="text-white font-bold text-xl">{formData.name || "Usuário"}</h3><p className="text-gray-500 mb-4">{formData.email}</p>{formData.avatar && <button onClick={handleRemovePhoto} className="text-red-400 text-xs font-bold hover:underline flex items-center gap-1 mx-auto md:mx-0"><Trash2 size={12} /> Remover foto</button>}</div>
+            <div className="text-center md:text-left flex-1"><h3 className="text-white font-bold text-xl">{formData.name || "Usuário"}</h3><p className="text-gray-500 mb-4">{formData.email}</p>{formData.avatar && <button type="button" onClick={handleRemovePhoto} className="text-red-400 text-xs font-bold hover:underline flex items-center gap-1 mx-auto md:mx-0 cursor-pointer"><Trash2 size={12} /> Remover foto</button>}</div>
          </div>
          <form className="flex flex-col gap-4" onSubmit={handleSave}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -662,25 +690,81 @@ const AdminScreen = ({ onLogout }) => {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-6 md:p-10 animate-in fade-in duration-500">
       <div className="max-w-7xl mx-auto">
+
         <div className="flex justify-between items-center mb-10">
            <div className="flex items-center gap-4">
               <div className="p-3 bg-blue-600/20 rounded-xl text-blue-500"><User size={32} /></div>
-              <div><h1 className="text-3xl font-bold">Painel Administrativo</h1><p className="text-gray-400">Gerenciamento do Sistema</p></div>
+              <div>
+                <h1 className="text-3xl font-bold">Painel Administrativo</h1>
+                <p className="text-gray-400">Gerenciamento do Sistema</p>
+              </div>
            </div>
-           <button onClick={onLogout} className="flex items-center gap-2 px-6 py-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all font-bold"><LogOut size={20} /> Sair</button>
+           <button onClick={onLogout} className="flex items-center gap-2 px-6 py-3 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all font-bold">
+             <LogOut size={20} /> Sair
+           </button>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800"><p className="text-gray-400 mb-2">Total de Usuários</p><h2 className="text-4xl font-bold">{loading ? <span className="text-gray-600 text-2xl">Carregando...</span> : totalUsers}</h2></div>
-           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800"><p className="text-gray-400 mb-2">Usuários Ativos (Users)</p><h2 className="text-4xl font-bold text-cashGreen">{loading ? <span className="text-gray-600 text-2xl">...</span> : activeUsers}</h2></div>
-           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800"><p className="text-gray-400 mb-2">Status do Sistema</p><h2 className="text-4xl font-bold text-blue-400">Online</h2></div>
+           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800">
+              <p className="text-gray-400 mb-2">Total de Usuários</p>
+              <h2 className="text-4xl font-bold">
+                {loading ? <span className="text-gray-600 text-2xl">Carregando...</span> : totalUsers}
+              </h2>
+           </div>
+           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800">
+              <p className="text-gray-400 mb-2">Usuários Ativos (Users)</p>
+              <h2 className="text-4xl font-bold text-cashGreen">
+                {loading ? <span className="text-gray-600 text-2xl">...</span> : activeUsers}
+              </h2>
+           </div>
+           <div className="bg-[#1E1E1E] p-6 rounded-2xl border border-gray-800">
+              <p className="text-gray-400 mb-2">Status do Sistema</p>
+              <h2 className="text-4xl font-bold text-blue-400">Online</h2>
+           </div>
         </div>
+
         <div className="bg-[#1E1E1E] rounded-2xl border border-gray-800 overflow-hidden">
-           <div className="p-6 border-b border-gray-800 flex justify-between items-center"><h3 className="text-xl font-bold">Usuários Cadastrados</h3><span className="text-xs text-gray-500">Atualizado em tempo real</span></div>
+           <div className="p-6 border-b border-gray-800 flex justify-between items-center">
+              <h3 className="text-xl font-bold">Usuários Cadastrados</h3>
+              <span className="text-xs text-gray-500">Atualizado em tempo real</span>
+           </div>
            <div className="overflow-x-auto">
               <table className="w-full text-left">
-                 <thead className="bg-[#151515] text-gray-400 uppercase text-xs"><tr><th className="px-6 py-4">ID</th><th className="px-6 py-4">Nome</th><th className="px-6 py-4">Email</th><th className="px-6 py-4">Perfil</th></tr></thead>
+                 <thead className="bg-[#151515] text-gray-400 uppercase text-xs">
+                    <tr>
+                       <th className="px-6 py-4">ID</th>
+                       <th className="px-6 py-4">Nome</th>
+                       <th className="px-6 py-4">Email</th>
+                       <th className="px-6 py-4">Perfil</th>
+                    </tr>
+                 </thead>
                  <tbody className="divide-y divide-gray-800">
-                    {loading ? (<tr><td colSpan="4" className="px-6 py-8 text-center text-gray-500">Carregando dados...</td></tr>) : users.length === 0 ? (<tr><td colSpan="4" className="px-6 py-8 text-center text-gray-500">Nenhum usuário encontrado na base de dados.</td></tr>) : (users.map((u) => (<tr key={u.id} className="hover:bg-white/5 transition-colors"><td className="px-6 py-4 font-mono text-gray-500">#{u.id}</td><td className="px-6 py-4 font-bold">{u.name || "Sem Nome"}</td><td className="px-6 py-4 text-gray-300">{u.email}</td><td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-bold ${u.role === 'ADMIN' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>{u.role || "USER"}</span></td></tr>)))}
+                    {loading ? (
+                       <tr>
+                          <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
+                             Carregando dados...
+                          </td>
+                       </tr>
+                    ) : users.length === 0 ? (
+                       <tr>
+                          <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
+                             Nenhum usuário encontrado na base de dados.
+                          </td>
+                       </tr>
+                    ) : (
+                       users.map((u) => (
+                          <tr key={u.id} className="hover:bg-white/5 transition-colors">
+                             <td className="px-6 py-4 font-mono text-gray-500">#{u.id}</td>
+                             <td className="px-6 py-4 font-bold">{u.name || "Sem Nome"}</td>
+                             <td className="px-6 py-4 text-gray-300">{u.email}</td>
+                             <td className="px-6 py-4">
+                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${u.role === 'ADMIN' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'}`}>
+                                   {u.role || "USER"}
+                                </span>
+                             </td>
+                          </tr>
+                       ))
+                    )}
                  </tbody>
               </table>
            </div>
@@ -848,8 +932,9 @@ function App() {
     try {
         await axios.delete(`http://localhost:8080/api/reminders/${id}`);
         setReminders(reminders.filter(r => r.id !== id));
+        showAlert('Sucesso', 'Conta paga!', 'success');
     } catch (error) {
-        showAlert('Erro', 'Falha ao deletar lembrete.', 'error');
+        showAlert('Erro', 'Falha ao pagar conta.', 'error');
     }
   };
 
@@ -918,7 +1003,7 @@ function App() {
 
          setUser(res.data);
          setCurrentScreen('app');
-         showAlert('Bem-vindo!', 'Sua conta foi criada e salva.', 'success');
+         showAlert('Bem-vindo!', 'Sua conta foi criada com sucesso!', 'success');
 
        } else {
          const res = await axios.post('http://localhost:8080/api/users/login', {
@@ -960,7 +1045,7 @@ function App() {
       <div key={activeTab} className="animate-in fade-in slide-in-from-bottom-8 duration-500 ease-out">
         {(() => {
           switch(activeTab) {
-             case 'dashboard': return <DashboardScreen user={user} transactions={transactions} userCategories={userCategories} reminders={reminders} />; 
+             case 'dashboard': return <DashboardScreen user={user} transactions={transactions} userCategories={userCategories} reminders={reminders} onPayReminder={handleDeleteReminder} />; 
              case 'perfil': return <ProfileScreen user={user} onUpdateUser={setUser} showAlert={showAlert} />;
              case 'transacoes': return <TransactionScreen transactions={transactions} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} userCategories={userCategories} onAddCategory={handleAddCategory} onDeleteCategory={handleDeleteCategory} />;
              case 'createGoal': 
@@ -980,23 +1065,20 @@ function App() {
     return (
       <div className="min-h-screen w-full bg-gradient-app flex items-center justify-center p-6 overflow-hidden">
         <SystemPopup isOpen={popupConfig.isOpen} onClose={closeAlert} type={popupConfig.type} title={popupConfig.title} message={popupConfig.message} />
-        
-        {showTermsModal && (
-            <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in">
-                <div className="bg-[#1E1E1E] border border-gray-700 p-6 rounded-2xl w-full max-w-lg max-h-[80vh] flex flex-col relative animate-in zoom-in-95">
-                    <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-4">
-                        <h3 className="text-white font-bold text-xl flex items-center gap-2"><FileText size={24} className="text-cashGreen"/> Termos de Uso</h3>
-                        <button onClick={() => setShowTermsModal(false)} className="text-gray-400 hover:text-white"><X size={24} /></button>
-                    </div>
-                    <div className="flex-1 overflow-y-auto custom-scrollbar text-gray-300 text-sm leading-relaxed whitespace-pre-line pr-2">
-                        {typeof termsText === 'string' ? termsText : "Carregando termos..."}
-                    </div>
-                    <div className="mt-6 pt-4 border-t border-gray-700">
-                        <button onClick={() => { setAcceptedTerms(true); setShowTermsModal(false); }} className="w-full py-3 bg-cashGreen text-black font-bold rounded-xl hover:bg-green-400 transition-all">Li e Concordo</button>
-                    </div>
+        <PortalModal isOpen={showTermsModal}>
+            <div className="bg-[#1E1E1E] border border-gray-700 p-6 rounded-2xl w-full max-w-lg max-h-[80vh] flex flex-col relative animate-in zoom-in-95">
+                <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-4">
+                    <h3 className="text-white font-bold text-xl flex items-center gap-2"><FileText size={24} className="text-cashGreen"/> Termos de Uso</h3>
+                    <button onClick={() => setShowTermsModal(false)} className="text-gray-400 hover:text-white"><X size={24} /></button>
+                </div>
+                <div className="flex-1 overflow-y-auto custom-scrollbar text-gray-300 text-sm leading-relaxed whitespace-pre-line pr-2">
+                    {typeof termsText === 'string' ? termsText : "Carregando termos..."}
+                </div>
+                <div className="mt-6 pt-4 border-t border-gray-700">
+                    <button onClick={() => { setAcceptedTerms(true); setShowTermsModal(false); }} className="w-full py-3 bg-cashGreen text-black font-bold rounded-xl hover:bg-green-400 transition-all">Li e Concordo</button>
                 </div>
             </div>
-        )}
+        </PortalModal>
 
         <div className="w-full max-w-md transition-all duration-500">
            <Logo />
