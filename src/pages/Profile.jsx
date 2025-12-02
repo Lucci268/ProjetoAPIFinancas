@@ -25,7 +25,6 @@ const Profile = ({ user, onUpdateUser, showAlert }) => {
   const handleSave = async (e) => { 
       e.preventDefault(); 
       try {
-          // Aqui usamos axios direto pois pode não usar o interceptor padrão
           const response = await axios.put(`http://localhost:8080/api/users/${user.id}`, formData);
           onUpdateUser(response.data);
           localStorage.setItem('cashplus_user', JSON.stringify(response.data));
