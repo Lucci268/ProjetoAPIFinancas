@@ -1,30 +1,32 @@
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\AdminController.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\AuthController.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\CashplusApiApplication.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\Categoria.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\CategoriaController.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\CategoriaRepository.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\CategoriaService.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\Estatistica.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\EstatisticaService.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\Meta.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\MetaController.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\MetaRepository.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\MetaService.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\RegraValidacao.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\RegraValidacaoController.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\RegraValidacaoRepository.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\RegraValidacaoService.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\Reminder.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\ReminderController.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\ReminderRepository.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\ReminderService.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\TermosController.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\TermosService.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\Transacao.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\TransacaoController.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\TransacaoRepository.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\TransacaoService.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\User.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\UserRepository.java
-C:\Users\felip\OneDrive\Área de Trabalho\projeto\ProjetoAPIFinancas\src\api\UserService.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\auth\AuthController.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\CashplusApiApplication.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\category\Categoria.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\category\CategoriaController.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\category\CategoriaRepository.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\category\CategoriaService.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\config\CorsConfig.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\goal\Meta.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\goal\MetaController.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\goal\MetaRepository.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\goal\MetaService.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\reminder\Reminder.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\reminder\ReminderController.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\reminder\ReminderRepository.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\reminder\ReminderService.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\statistics\Estatistica.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\statistics\EstatisticasController.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\statistics\EstatisticaService.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\transaction\Transacao.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\transaction\TransacaoController.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\transaction\TransacaoRepository.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\transaction\TransacaoService.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\user\User.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\user\UserController.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\user\UserRepository.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\user\UserService.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\utils\TermosController.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\utils\TermosService.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\validation\RegraValidacao.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\validation\RegraValidacaoController.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\validation\RegraValidacaoRepository.java
+C:\Users\janeb\OneDrive\Documentos\New Folder\ProjetoAPIFinancas\src\api\validation\RegraValidacaoService.java
