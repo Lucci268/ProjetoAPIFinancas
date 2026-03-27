@@ -20,9 +20,9 @@
 
 <div align="center">
 
-| [<img src="https://avatars.githubusercontent.com/u/169162600?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/ArturLima33) | [<img src="https://avatars.githubusercontent.com/u/169162345?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/D4n1el20) | [<img src="https://avatars.githubusercontent.com/u/163533321?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/Cyvier) | [<img src="https://avatars.githubusercontent.com/u/169077824?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/felipeassiss) | [<img src="https://avatars.githubusercontent.com/u/169167613?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/JulioCesarLinss) | [<img src="https://avatars.githubusercontent.com/u/169167539?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/Lucci268) |
-|:--:|:--:|:--:|:--:|:--:|:--:|
-| **Artur Lima** | **Daniel Silva** | **Davi Magalhães** | **Felipe Assis** | **Júlio Lins** | **Lucciano Cordeiro** |
+| [<img src="https://avatars.githubusercontent.com/u/169162345?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/D4n1el20) | [<img src="https://avatars.githubusercontent.com/u/169077824?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/felipeassiss) | [<img src="https://avatars.githubusercontent.com/u/169167613?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/JulioCesarLinss) | [<img src="https://avatars.githubusercontent.com/u/169167539?v=4" width="100" height="100" style="border-radius:50%">](https://github.com/Lucci268) |
+|:--:|:--:|:--:|:--:|
+| **Daniel Silva** | **Felipe Assis** | **Júlio Lins** | **Lucciano Cordeiro** |
 
 </div>
 
